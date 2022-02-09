@@ -82,16 +82,42 @@
                 <!--Divider-->
                 <hr class="my-3">
                 <!--Heading-->
-                <h6 class="navbar-heading text-muted">Administración</h6>
+                <h6 class="navbar-heading text-muted">Personal</h6>
                 <!--Navigation-->
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
                         <router-link class="nav-link" to="/usuarios"><i class="ni ni-single-02"></i>Usuarios</router-link>
                     </li>
                     <li class="nav-item">
-                         <router-link class="nav-link" to="/usuarios"><i class="ni ni-tag"></i>Roles</router-link>
+                         <router-link class="nav-link" to="/roles"><i class="ni ni-tag"></i>Roles</router-link>
                     </li>
-                   
+                     <li class="nav-item">
+                         <router-link class="nav-link" to="/clientes"><i class="ni ni-briefcase-24"></i>Clientes</router-link>
+                    </li>
+                     <li class="nav-item">
+                         <router-link class="nav-link" to="/proveedores"><i class="ni ni-briefcase-24"></i>Proveedores</router-link>
+                    </li>
+                </ul>
+
+                 <!--Heading-->
+                <h6 class="navbar-heading text-muted">Gestión Planta</h6>
+                <!--Navigation-->
+                <ul class="navbar-nav mb-md-3">
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/cala"><i class="ni ni-curved-next"></i>Cala</router-link>
+                    </li>
+                    <li class="nav-item">
+                         <router-link class="nav-link" to="/produccion"><i class="ni ni-chart-bar-32"></i>Producción</router-link>
+                    </li>
+                     <li class="nav-item">
+                         <router-link class="nav-link" to="/venta"><i class="ni ni-cart"></i>Venta</router-link>
+                    </li>
+                     <li class="nav-item">
+                         <router-link class="nav-link" to="/facturacion"><i class="ni ni-single-copy-04"></i>Facturación</router-link>
+                    </li>
+                      <li class="nav-item">
+                         <router-link class="nav-link" to="/transportistas"><i class="ni ni-delivery-fast"></i>Transportistas</router-link>
+                    </li>
                 </ul>
             </div>
             </div>

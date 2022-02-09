@@ -1,110 +1,217 @@
 <template>
   <div>
-
     <base-header class="pb-6 pb-8 pt-2 pt-md-8 bg-gradient-success">
       <!-- Card stats -->
     </base-header>
 
+
+    <!-- The Modal -->
+    <div class="modal" :class="{mostrar: modal}">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">{{tituloModal}}</h4>
+            <button @click="cerrarModal();"  type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+              <label>Nombre</label>
+              <input  v-model="usuarios.name" type="text" class="form-control" id="name" placeholder="Nombre del usuario">
+              </div>
+               <div class="col-md-6">
+              <label>Apellido</label>
+              <input  v-model="usuarios.last_name" type="text" class="form-control" id="last_name" placeholder="Apellido del usuario">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+              <label>Email</label>
+              <input v-model="usuarios.email" type="text" class="form-control" id="email" placeholder="Ingrese una direccion de email">
+            </div>
+               <div class="col-md-6">
+              <label>Rol</label>
+                 <div v-if="usuarios.rol == '1'">
+                    <select id="rol" v-model="usuarios.rol" class="form-control">
+                         <option  value='1' selected>Administrador</option> 
+                         <option  value='2'>Usuario</option> 
+                    </select>
+                </div>
+                <div v-else-if="usuarios.rol == '2'">
+                    <select id="rol" v-model="usuarios.rol" class="form-control">
+                        <option  value='1'>Administrador</option> 
+                        <option  value='2' selected>Usuario</option> 
+                    </select>
+                </div>
+                <div v-else>
+                    <select id="rol" v-model="usuarios.rol " class="form-control">
+                        <option disabled value="">Elige un rol para el usuario..</option>
+                        <option value=1>Administrador</option> 
+                        <option value=2>Usuario</option> 
+                    </select>
+                </div>              
+            </div>
+            
+            </div>
+         
+
+            <div class="row">
+
+               <div class="col-md-6">
+              <label>Password</label>
+              <input v-model="usuarios.password" type="password" class="form-control" id="password" placeholder="Ingrese una contraseña">
+            </div>
+             <div class="col-md-6">
+              <label>Coonfirmar Password</label>
+              <input v-model="usuarios.password" type="password" class="form-control" id="password" placeholder="Ingrese una contraseña">
+            </div>
+            </div>
+         
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button @click="cerrarModal();" type="button" class="btn btn-secondary" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!--Charts-->
     <b-container fluid class="mt--7">
-  
       <!--Tables-->
       <b-row class="mt-1">
         <b-col xl="12" class="mb-5 mb-xl-0">
           <b-card body-class="p-0" header-class="border-0">
-    <template v-slot:header>
-      <b-row align-v="center">
-        <b-col>
-          <h3 class="mb-0">Usuarios</h3>
-        </b-col>
-        <b-col class="text-right">
-          <base-button size="sm" type="primary">Nuevo Usuario</base-button>
-        </b-col>
-      </b-row>
-    </template>
+            <template v-slot:header>
+              <b-row align-v="center">
+                <b-col>
+                  <h3 class="mb-0">Usuarios</h3>
+                </b-col>
+                <b-col class="text-right">
+                  <base-button @click="modificar=false; abrirModal();" size="sm" type="primary"
+                    >Nuevo Usuario</base-button
+                  >
+                </b-col>
+              </b-row>
+            </template>
 
+            <table class="table" id="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Accion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="users in user" :key="users.id">
+                  <th scope="row">{{ users.id }}</th>
+                  <td>{{ users.name }}</td>
+                  <td>{{ users.last_name }}</td>
+                  <td>{{ users.email }}</td>
+                  <td>{{ users.role.name }}</td>
 
-    <el-table
-      class="table-responsive table"
-      :data="tableData"
-      header-row-class-name="thead-light">
-      <el-table-column label="Referral" min-width="115px" prop="name">
-        <template v-slot="{row}">
-          <div class="font-weight-600">{{row.name}}</div>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="Visitors" min-width="110px" prop="visitors">
-      </el-table-column>
-
-      <el-table-column min-width="220px" prop="progress">
-        <template v-slot="{row}">
-          <div class="d-flex align-items-center">
-            <span class="mr-2">{{row.progress}}%</span>
-            <base-progress :type="row.progressType" :value="row.progress" />
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
-  </b-card>
+                  <td>
+                    <button class="btn btn-secondary btn-sm">Editar</button>
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </b-card>
         </b-col>
       </b-row>
       <!--End tables-->
     </b-container>
-
   </div>
 </template>
 <script>
-  import { BaseProgress } from '@/components';
-  import { Table, TableColumn, DropdownMenu, DropdownItem, Dropdown} from 'element-ui'
-  export default {
-    name: 'social-traffic-table',
-    components: {
-      BaseProgress,
-      [Table.name]: Table,
-      [TableColumn.name]: TableColumn,
-      [Dropdown.name]: Dropdown,
-      [DropdownItem.name]: DropdownItem,
-      [DropdownMenu.name]: DropdownMenu,
-    },
-    data() {
-      return {
-        tableData: [
-          {
-            name: 'Facebook',
-            visitors: '1,480',
-            progress: 60,
-            progressType: 'gradient-danger',
-          },
-          {
-            name: 'LinkedIn',
-            visitors: '5,480',
-            progress: 70,
-            progressType: 'gradient-success',
-          },
-          {
-            name: 'Google',
-            visitors: '4,807',
-            progress: 80,
-            progressType: 'gradient-primary',
-          },
-          {
-            name: 'Instagram',
-            visitors: '3,678',
-            progress: 75,
-            progressType: 'gradient-info',
-          },
-          {
-            name: 'Twitter',
-            visitors: '2,645',
-            progress: 30,
-            progressType: 'gradient-warning',
-          }
-        ]
-      }
-    }
+import axios from "axios";
+export default {
+  data() {
+    return {
+      usuarios: {
+        name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        rol: "",
+      },
+      id: 0,
+      modificar: true,
+      modal: 0,
+      tituloModal: "",
+      user: [],
+    };
+  },
 
-  }
+  methods: {
+    listar_usuarios() {
+      axios
+        .get(process.env.VUE_APP_RUTA_API + "users", {
+          headers: {
+            Authorization: `Bearer ${localStorage.token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.user = res.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
+    abrirModal(data={}){
+      this.modal=1;
+      if(this.modificar){
+        this.id=data.id;
+        this.tituloModal="Modificar Usuario";
+        this.usuarios.name=data.name;
+        this.usuarios.email=data.email;
+        this.usuarios.password=data.password;
+        this.usuarios.rol=data.roles[0].id;
+      }else{
+        this.id=0;
+        this.tituloModal="Crear Usuario";
+        this.usuarios.name='';
+        this.usuarios.email='';
+        this.usuarios.password='';
+        this.usuarios.rol='';
+      }
+    },
+    cerrarModal(){
+      this.modal=0;
+    },
+  },
+
+  
+
+  created() {
+    this.listar_usuarios();
+    console.log(localStorage.token);
+  },
+};
 </script>
 <style>
+  .mostrar{
+    display: list-item;
+    opacity: 1;
+    background: rgba(131, 145, 146, 0.705);
+  }
 </style>
+
