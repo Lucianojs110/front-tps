@@ -28,7 +28,7 @@
                         <button @click="cerrarModal();" type="button" class="btn btn-secondary" data-dismiss="modal">
                         Cancelar
                         </button>
-                        <button type="button" class="btn btn-success" data-dismiss="modal">
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @click="guardar()">
                         Guardar
                         </button>
                     </div>
@@ -96,6 +96,7 @@ export default {
             modal: 0,
             tituloModal: "",
             role: [],
+            nuevoRol:''
       };
   },
 
@@ -115,6 +116,43 @@ export default {
         });
     
       },
+
+      /* agregar_Rol(nuevoRol){
+          console.log(nuevoRol);
+          axios.post(process.env.VUE_APP_RUTA_API + "roles", [], {
+			              headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+                      .then(data => (this.nuevoRol = data.name))          
+        .catch((error) => {
+          console.error(error);
+         });
+        }, */
+
+
+      guardar() {
+      if(this.modificar){
+         axios.put(process.env.VUE_APP_RUTA_API + "roles"+ this.id, this.roles).then(res=>{ 
+                 this.cerrarModal();
+                 this.listar_roles();
+                /*  swal("Exito!", "El establecimiento se ha editado!", "success");}).catch(function (error){
+                     var array = Object.values(error.response.data.errors+'<br>')
+                     array.forEach(swal(String(array))) */
+                 });
+        
+      }else{
+         axios.post(process.env.VUE_APP_RUTA_API + "roles", this.roles,{
+			              headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+              .then(res=>{ 
+                 this.cerrarModal();
+                 this.listar_roles();
+                 });
+                 
+     
+      }
+      
+    },
+
+    
+     
       abrirModal(data={}){
           this.modal=1;
           if(this.modificar){
@@ -122,7 +160,6 @@ export default {
             this.tituloModal="Modificar Rol";
             this.roles.name = data.name;
           }else{
-             console.log(this.roles)
             this.id=0;
             this.tituloModal="Crear Rol";
             this.roles.name='';
