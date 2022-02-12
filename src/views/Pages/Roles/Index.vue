@@ -69,8 +69,8 @@
                     <td>{{ roles.name }}</td>
 
                     <td>
-                        <button class="btn btn-secondary btn-sm">Editar</button>
-                        <button class="btn btn-danger btn-sm">Eliminar</button>
+                        <button @click="modificar=true; abrirModal(roles);" class="btn btn-secondary btn-sm">Editar</button>
+                        <button @click="eliminar(roles.id)" class="btn btn-danger btn-sm">Eliminar</button>
                     </td>
                     </tr>
                 </tbody>
@@ -89,14 +89,14 @@ export default {
   data(){
       return{
         roles:{
-            name:"",
+            name:'',
           },
             id: 0,
             modificar: true,
             modal: 0,
-            tituloModal: "",
-            role: [],
-            nuevoRol:''
+            tituloModal: '',
+            role: []
+           
       };
   },
 
@@ -116,43 +116,52 @@ export default {
         });
     
       },
-
-      /* agregar_Rol(nuevoRol){
-          console.log(nuevoRol);
-          axios.post(process.env.VUE_APP_RUTA_API + "roles", [], {
-			              headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
-                      .then(data => (this.nuevoRol = data.name))          
-        .catch((error) => {
-          console.error(error);
-         });
-        }, */
-
-
       guardar() {
-      if(this.modificar){
-         axios.put(process.env.VUE_APP_RUTA_API + "roles"+ this.id, this.roles).then(res=>{ 
-                 this.cerrarModal();
-                 this.listar_roles();
-                /*  swal("Exito!", "El establecimiento se ha editado!", "success");}).catch(function (error){
-                     var array = Object.values(error.response.data.errors+'<br>')
-                     array.forEach(swal(String(array))) */
-                 });
-        
-      }else{
-         axios.post(process.env.VUE_APP_RUTA_API + "roles", this.roles,{
-			              headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
-              .then(res=>{ 
-                 this.cerrarModal();
-                 this.listar_roles();
-                 });
-                 
-     
-      }
+        if(this.modificar){
+          axios.put(process.env.VUE_APP_RUTA_API + "roles/"+this.id, this.roles,{
+                      headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+                .then(res=>{ 
+                  this.cerrarModal();
+                  this.listar_roles();
+                  swal("Exito!", "El Rol se ha modificado!", "success");}).catch(function (error){
+                      var array = Object.values(error.response.data.errors+'<br>')
+                      array.forEach(swal(String(array)))
+                  });
+          
+        }else{
+          axios.post(process.env.VUE_APP_RUTA_API + "roles", this.roles,{
+                      headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+                .then(res=>{ 
+                  this.cerrarModal();
+                  this.listar_roles();
+                  swal("Exito!", "El Rol se ha creado!", "success");}).catch(function (error){
+                      var array = Object.values(error.response.data.errors)
+                      array.forEach(swal(String(array)))
+                  });   
+        }
       
-    },
-
-    
-     
+      },
+      eliminar(id){
+          swal({
+          title: '¿ Esta seguro ?',
+          text: 'El Rol será eliminado definitavemente!',
+          icon: 'warning',
+          buttons: ["Cancelar", " Si "],
+          }).then((willDelete)=> {
+          if (willDelete) {
+                  axios.delete(process.env.VUE_APP_RUTA_API + "roles/"+id,{
+                      headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+                  .then(res=>{
+                    this.cerrarModal();
+                    this.listar_roles();
+                    swal("Exito!", "El Rol se ha eliminado!", "success");
+                  }).catch(function (error){
+                      var array = Object.values(error.response.data.errors)
+                      array.forEach(swal(String(array)))    
+                  });        
+          } 
+        });
+      },
       abrirModal(data={}){
           this.modal=1;
           if(this.modificar){
