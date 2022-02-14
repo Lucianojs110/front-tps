@@ -34,9 +34,15 @@
               <label>Email</label>
               <input v-model="usuarios.email" type="text" class="form-control" id="email" placeholder="Ingrese una direccion de email">
             </div>
-               <div class="col-md-6">
+            <div class="col-md-6">
               <label>Rol</label>
-                 <div v-if="usuarios.rol == '1'">
+              <select @change="selectCategory($event)" v-model="roles.role" class="form-control">
+                <option disabled value="">Elige un rol para el usuario..</option>
+                  <option selected v-for="rol in roles" :key="rol.id">
+                      {{ rol.id }} {{ rol.name }}
+                  </option>
+              </select>
+                 <!-- <div v-if="usuarios.rol == '1'">
                     <select id="rol" v-model="usuarios.rol" class="form-control">
                          <option  value='1' selected>Administrador</option> 
                          <option  value='2'>Usuario</option> 
@@ -50,18 +56,17 @@
                 </div>
                 <div v-else>
                     <select id="rol" v-model="usuarios.rol " class="form-control">
-                        <option disabled value="">Elige un rol para el usuario..</option>
+                        
                         <option value=1>Administrador</option> 
                         <option value=2>Usuario</option> 
                     </select>
-                </div>              
+                </div> -->              
             </div>
             
-            </div>
+          </div>
          
 
             <div class="row">
-
                <div class="col-md-6">
               <label>Password</label>
               <input v-model="usuarios.password" type="password" class="form-control" id="password" placeholder="Ingrese una contraseña">
@@ -79,7 +84,7 @@
             <button @click="cerrarModal();" type="button" class="btn btn-secondary" data-dismiss="modal">
               Cancelar
             </button>
-            <button type="button" class="btn btn-success" data-dismiss="modal">
+            <button type="button" class="btn btn-success" data-dismiss="modal" @click="guardar()">
               Guardar
             </button>
           </div>
@@ -126,7 +131,7 @@
                   <td>{{ users.role.name }}</td>
 
                   <td>
-                    <button class="btn btn-secondary btn-sm">Editar</button>
+                    <button @click="modificar=true; abrirModal(users);" class="btn btn-secondary btn-sm">Editar</button>
                     <button class="btn btn-danger btn-sm">Eliminar</button>
                   </td>
                 </tr>
@@ -151,6 +156,10 @@ export default {
         password: "",
         rol: "",
       },
+      roles: [],
+        selected:{
+          role:''
+        },
       id: 0,
       modificar: true,
       modal: 0,
@@ -159,7 +168,13 @@ export default {
     };
   },
 
+  mounted() {
+    this.getRoles();
+    },
   methods: {
+    selectCategory(event) {
+      console.log(event.target.value);
+    },
     listar_usuarios() {
       axios
         .get(process.env.VUE_APP_RUTA_API + "users", {
@@ -176,19 +191,48 @@ export default {
         });
     },
 
+    guardar() {
+        if(this.modificar){
+          axios.put(process.env.VUE_APP_RUTA_API + "users/"+this.id, this.usuarios,{
+                      headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+                .then(res=>{ 
+                  this.cerrarModal();
+                  this.listar_usuarios();
+                  swal("Exito!", "El Usuario se ha modificado!", "success");}).catch(function (error){
+                      var array = Object.values(error.response.data.errors+'<br>')
+                      array.forEach(swal(String(array)))
+                  });
+          
+        }else{
+          axios.post(process.env.VUE_APP_RUTA_API + "users", this.usuarios,{
+                      headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+                .then(res=>{ 
+                  this.cerrarModal();
+                  this.listar_usuarios();
+                  swal("Exito!", "El Usuario se ha creado!", "success");}).catch(function (error){
+                      var array = Object.values(error.response.data.errors)
+                      array.forEach(swal(String(array)))
+                  });   
+          }
+      
+      },
+
     abrirModal(data={}){
       this.modal=1;
       if(this.modificar){
         this.id=data.id;
         this.tituloModal="Modificar Usuario";
         this.usuarios.name=data.name;
+        this.usuarios.last_name=data.last_name;
         this.usuarios.email=data.email;
         this.usuarios.password=data.password;
-        this.usuarios.rol=data.roles[0].id;
+        this.usuarios.rol=data.role.name;
+        console.log('role: '+data.role.name)
       }else{
         this.id=0;
         this.tituloModal="Crear Usuario";
         this.usuarios.name='';
+        this.usuarios.last_name='';
         this.usuarios.email='';
         this.usuarios.password='';
         this.usuarios.rol='';
@@ -197,9 +241,22 @@ export default {
     cerrarModal(){
       this.modal=0;
     },
-  },
 
-  
+    getRoles(){
+      axios.get(process.env.VUE_APP_RUTA_API + "roles", {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.token}`,
+                },
+              })
+            .then((res) => {
+                  console.log(res.data);
+                  this.roles = res.data;
+              })
+            .catch((error) => {
+                  console.error(error);
+              })
+        },
+  },
 
   created() {
     this.listar_usuarios();
