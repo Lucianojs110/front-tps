@@ -36,10 +36,10 @@
             </div>
             <div class="col-md-6">
               <label>Rol</label>
-              <select @change="selectCategory($event)" v-model="roles.role" class="form-control">
+              <select id="rol" @change="selectCategory($event)" v-model="usuarios.rol" class="form-control">
                 <option disabled value="">Elige un rol para el usuario..</option>
-                  <option selected v-for="rol in roles" :key="rol.id">
-                      {{ rol.id }} {{ rol.name }}
+                  <option selected v-for="rol in roles" :key="rol.id" :value="rol.id">
+                      {{ rol.name }} <!-- {{ rol.name }} -->
                   </option>
               </select>
                  <!-- <div v-if="usuarios.rol == '1'">
@@ -205,7 +205,8 @@ export default {
           
         }else{
           axios.post(process.env.VUE_APP_RUTA_API + "users", this.usuarios,{
-                      headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+                      headers: { 'Authorization' : 'Bearer '+ localStorage.token},
+              })
                 .then(res=>{ 
                   this.cerrarModal();
                   this.listar_usuarios();
