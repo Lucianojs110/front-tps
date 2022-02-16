@@ -132,7 +132,7 @@
 
                   <td>
                     <button @click="modificar=true; abrirModal(users);" class="btn btn-secondary btn-sm">Editar</button>
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                    <button @click="eliminar(users.id)" class="btn btn-danger btn-sm">Eliminar</button>
                   </td>
                 </tr>
               </tbody>
@@ -216,6 +216,27 @@ export default {
                   });   
           }
       
+      },
+    eliminar(id){
+          swal({
+          title: '¿ Esta seguro ?',
+          text: 'El Usuario será eliminado definitavemente!',
+          icon: 'warning',
+          buttons: ["Cancelar", " Si "],
+          }).then((willDelete)=> {
+          if (willDelete) {
+                  axios.delete(process.env.VUE_APP_RUTA_API + "users/"+id,{
+                      headers: { 'Authorization' : 'Bearer '+ localStorage.token}})
+                  .then(res=>{
+                    this.cerrarModal();
+                    this.listar_usuarios();
+                    swal("Exito!", "El Usuario se ha eliminado!", "success");
+                  }).catch(function (error){
+                      var array = Object.values(error.response.data.errors)
+                      array.forEach(swal(String(array)))    
+                  });        
+          } 
+        });
       },
 
     abrirModal(data={}){
