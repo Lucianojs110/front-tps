@@ -248,8 +248,8 @@ export default {
         this.usuarios.last_name=data.last_name;
         this.usuarios.email=data.email;
         this.usuarios.password=data.password;
-        this.usuarios.rol=data.role.name;
-        console.log('role: '+data.role.name)
+        this.usuarios.rol=data.role.id;
+        console.log('id_rol: '+data.role.id)
       }else{
         this.id=0;
         this.tituloModal="Crear Usuario";
@@ -282,7 +282,7 @@ export default {
 
   created() {
     this.listar_usuarios();
-    console.log(localStorage.token);
+    /* console.log(localStorage.token); */
   },
 };
 </script>
