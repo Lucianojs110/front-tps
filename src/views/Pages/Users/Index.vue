@@ -73,7 +73,7 @@
             </div>
              <div class="col-md-6">
               <label>Coonfirmar Password</label>
-              <input v-model="usuarios.password" type="password" class="form-control" id="password" placeholder="Ingrese una contraseña">
+              <input v-model="usuarios.cpassword" type="password" class="form-control" id="password" placeholder="Ingrese una contraseña">
             </div>
             </div>
          
@@ -154,6 +154,7 @@ export default {
         last_name: "",
         email: "",
         password: "",
+        cpassword:"",
         rol: "",
       },
       roles: [],
