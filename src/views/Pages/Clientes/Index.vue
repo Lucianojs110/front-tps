@@ -20,25 +20,152 @@
             </button>
           </div>
           <!-- Modal body -->
-        <div>
-         
-        <form @submit.prevent="onFormSubmit">
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" v-model="cliente.name"  class="form-control"
-                    :class="{ 'is-invalid': isValid && $v.cliente.name.$error }" />
-                
-                <div v-if="isValid && !$v.cliente.name.required" class="invalid-feedback">El nombre es requerido</div>
-            </div>
-               <div class="form-group">
-                <button class="btn btn-primary btn-block">Submit</button>
-            </div>
-         </form>
+          <div class="modal-body">
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Nombre o razon social</label>
+                <input
+                  v-model="cliente.nombre"
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Nombre o razon social del cliente"
+                  :class="{
+                    'is-invalid': isValid && $v.cliente.nombre.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.cliente.nombre.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
 
+              <div class="col-md-2">
+                <label>Tipo Doc</label>
+                <select
+                  @change="selectCategory($event)"
+                  v-model="cliente.tipo_doc"
+                  class="form-control"
+                  :class="{
+                    'is-invalid': isValid && $v.cliente.tipo_doc.$error,
+                  }"
+                >
+                  <option disabled value="">
+                    Seleccione...
+                  </option>
+                  <option>DNI</option>
+                  <option>CUIT</option>
+                </select>
+                   <div
+                  v-if="isValid && !$v.cliente.tipo_doc.required"
+                  class="invalid-feedback"
+                   >
+                  El campo es requerido
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label>Numero Documento</label>
+                <input
+                  v-model="cliente.num_doc"
+                  type="text"
+                  class="form-control"
+                  id="num_doc"
+                  placeholder="Numero de CUIT o DNI"
+                  :class="{
+                    'is-invalid': isValid && $v.cliente.num_doc.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.cliente.num_doc.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Email</label>
+                <input
+                  v-model="cliente.email"
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  placeholder="Ingrese una dirección de email"
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label>Teléfono</label>
+                <input
+                  v-model="cliente.telefono"
+                  type="text"
+                  class="form-control"
+                  id="last_name"
+                  placeholder="Ingrese el numero de teléfono"
+                 
+                />
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Dirección</label>
+                <input
+                  v-model="cliente.direccion"
+                  type="text"
+                  class="form-control"
+                  id="direccion"
+                  placeholder="Ingrese una direccion"
+                 
+                />
+              </div>
+              <div class="col-md-6">
+                <label>Localidad</label>
+                <input
+                  v-model="cliente.ciudad"
+                  type="text"
+                  class="form-control"
+                  id="last_name"
+                  placeholder="Ingrese localidad del Cliente"
+                />
+              </div>
+            </div>
+            <!-- Fin Fila -->
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button
+              @click="cerrarModal()"
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              data-dismiss="modal"
+              @click="guardar()"
+            >
+              Guardar
+            </button>
+          </div>
         </div>
       </div>
-       </div>
     </div>
+        
 
     <!--Charts-->
     <b-container fluid class="mt--7">
@@ -49,7 +176,7 @@
             <template v-slot:header>
               <b-row align-v="center">
                 <b-col>
-                  <h3 class="mb-0">Roles</h3>
+                  <h3 class="mb-0">Listado de Clientes</h3>
                 </b-col>
                 <b-col class="text-right">
                   <base-button
@@ -59,18 +186,59 @@
                     "
                     size="sm"
                     type="primary"
-                    >Nuevo Rol</base-button
+                    >Nuevo Cliente</base-button
                   >
                 </b-col>
               </b-row>
             </template>
-
+            <div class="table-responsive">
+              <table class="table" id="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre/razon social</th>
+                    <th>DNI/CUIT</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="cliente in clientes" :key="cliente.id">
+                    <th scope="row">{{ cliente.id }}</th>
+                    <td>{{ cliente.nombre }}</td>
+                    <td>{{ cliente.tipo_doc }} - {{ cliente.num_doc }}</td>
+                    <td>{{ cliente.direccion }} - {{ cliente.ciudad }}</td>
+                    <td>{{ cliente.telefono }}</td>
+                    <td>{{ cliente.email }}</td>
+                    <td>
+                      <button
+                        @click="
+                          modificar = true;
+                          abrirModal(cliente);
+                        "
+                        class="btn btn-secondary btn-sm"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        @click="eliminar(cliente.id)"
+                        class="btn btn-danger btn-sm"
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </b-card>
         </b-col>
       </b-row>
       <!--End tables-->
     </b-container>
-  </div>
+   </div>
 </template>
 
 <script>
@@ -80,59 +248,171 @@ export default {
   data() {
     return {
        cliente: {
-        name: "",
+        nombre: "",
+        tipo_doc: "",
+        num_doc: "",
+        ciudad: "",
+        direccion: "",
+        email: "",
+        telefono: "",
       },
+
       id: 0,
       modificar: true,
       modal: 0,
       tituloModal: '',
-      role: [],
+      clientes: [],
       isValid: false
     };
   },
 
   validations: {
     cliente: {
-        name: {
-                required
-        },
-  }
+        nombre: {
+        required,
+        minLength: minLength(2),
+      },
+       tipo_doc: {
+        required,
+      },
+      num_doc: {
+        required,
+      },
+    },
   },
 
   methods: {
   
+    selectCategory(event) {
+      console.log(event.target.value);
+    },
 
-  onFormSubmit() {              
-                this.isValid = true;
+    listar_clientes() {
+      axios
+        .get(process.env.VUE_APP_RUTA_API + "clientes", {
+          headers: {
+            Authorization: `Bearer ${localStorage.token}`,
+          },
+        })
+        .then((res) => {
+          this.clientes = res.data;
+          /* console.table(res.data); */
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
 
-                this.$v.$touch();
-                if (this.$v.$invalid) {
-                    return;
-                }
-
-                this.axios.post('http://localhost:8888/contacts', this.contacts).then((response) => {
-                    this.resetForm();
-                    console.log(response.data);
-                })
-            },
-            
+    guardar() {
+      console.log('entro')
+      if (this.modificar) {
+        this.isValid = true;
+        this.$v.$touch();
+        
+        if (this.$v.$invalid) {
+          return;
+        }
+        axios
+          .put(
+            process.env.VUE_APP_RUTA_API + "clientes/" + this.id,
+            this.cliente,
+            {
+              headers: { Authorization: "Bearer " + localStorage.token },
+            }
+          )
+          .then((res) => {
+            this.cerrarModal();
+            this.listar_clientes();
+            swal("Exito!", "El Cliente se ha modificado!", "success");
+          })
+          .catch(function (error) {
+            var array = Object.values(error.response.data.errors + "<br>");
+            array.forEach(swal(String(array)));
+          });
+      } else {
+        
+        this.isValid = true;
+        this.$v.$touch();
+        
+        if (this.$v.$invalid) {
+          return;
+        }
+        
+        console.log('entro a CREAR')
+        axios
+          .post(process.env.VUE_APP_RUTA_API + "clientes", this.cliente, {
+            headers: { Authorization: "Bearer " + localStorage.token },
+          })
+          .then((res) => {
+            this.cerrarModal();
+            this.listar_clientes();
+            swal("Exito!", "El Cliente se ha creado!", "success");
+            this.$v.$reset();
+          })
+          .catch(function (error) {
+            var array = Object.values(error.response.data.errors + "<br>");
+            array.forEach(swal(String(array)));
+          });
+      }
+    },
+ 
+    eliminar(id) {
+      swal({
+        title: "¿ Esta seguro ?",
+        text: "El Cliente será eliminado definitavemente!",
+        icon: "warning",
+        buttons: ["Cancelar", " Si "],
+      }).then((willDelete) => {
+        if (willDelete) {
+          axios
+            .delete(process.env.VUE_APP_RUTA_API + "clientes/" + id, {
+              headers: { Authorization: "Bearer " + localStorage.token },
+            })
+            .then((res) => {
+              this.cerrarModal();
+              this.listar_clientes();
+              swal("Exito!", "El Cliente se ha eliminado!", "success");
+            })
+            .catch(function (error) {
+              var array = Object.values(error.response.data.errors);
+              array.forEach(swal(String(array)));
+            });
+        }
+      });
+    },        
     
     abrirModal(data = {}) {
       this.modal = 1;
       if (this.modificar) {
         this.id = data.id;
-        this.tituloModal = "Modificar Rol";
-        this.roles.name = data.name;
+        this.tituloModal = "Modificar Cliente";
+        this.cliente.nombre = data.nombre;
+        this.cliente.tipo_doc = data.tipo_doc;
+        this.cliente.num_doc = data.num_doc;
+        this.cliente.ciudad = data.ciudad;
+        this.cliente.direccion = data.direccion;
+        this.cliente.email = data.email;
+        this.cliente.telefono = data.telefono;
       } else {
         this.id = 0;
-        this.tituloModal = "Crear Rol";
-        this.roles.name = "";
+        this.tituloModal = "Crear Cliente";
+        this.cliente.nombre = data.nombre;
+        this.cliente.tipo_doc = data.tipo_doc;
+        this.cliente.num_doc = data.num_doc;
+        this.cliente.ciudad = data.ciudad;
+        this.cliente.direccion = data.direccion;
+        this.cliente.email = data.email;
+        this.cliente.telefono = data.telefono;
       }
     },
     
     cerrarModal() {
       this.modal = 0;
     },
+  },
+
+  created() {
+    this.listar_clientes();
   },
 
  
