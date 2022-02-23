@@ -56,8 +56,14 @@
                   <option disabled value="">
                     Seleccione...
                   </option>
-                  <option>DNI</option>
-                  <option>CUIT</option>
+                  <option
+                    selected
+                    v-for="item in items_tipo_doc"
+                    :key="item"
+                    :value="item"
+                  >
+                    {{ item }}
+                  </option>
                 </select>
                    <div
                   v-if="isValid && !$v.cliente.tipo_doc.required"
@@ -262,7 +268,8 @@ export default {
       modal: 0,
       tituloModal: '',
       clientes: [],
-      isValid: false
+      isValid: false,
+      items_tipo_doc: ['DNI', 'CUIT'],
     };
   },
 
@@ -396,13 +403,13 @@ export default {
       } else {
         this.id = 0;
         this.tituloModal = "Crear Cliente";
-        this.cliente.nombre = data.nombre;
-        this.cliente.tipo_doc = data.tipo_doc;
-        this.cliente.num_doc = data.num_doc;
-        this.cliente.ciudad = data.ciudad;
-        this.cliente.direccion = data.direccion;
-        this.cliente.email = data.email;
-        this.cliente.telefono = data.telefono;
+        this.cliente.nombre = "";
+        this.cliente.tipo_doc = "";
+        this.cliente.num_doc = "";
+        this.cliente.ciudad = "";
+        this.cliente.direccion = "";
+        this.cliente.email = "";
+        this.cliente.telefono = "";
       }
     },
     

@@ -48,6 +48,7 @@
               <div class="col-md-2">
                 <label>Tipo Doc</label>
                 <select
+                  id="tipo_doc"
                   v-model="proveedor.tipo_doc"
                   class="form-control"
                   :class="{
@@ -57,8 +58,14 @@
                   <option selected disabled value="">
                     Seleccione...
                   </option>
-                  <option>DNI</option>
-                  <option>CUIT</option>
+                  <option
+                    selected
+                    v-for="item in items_tipo_doc"
+                    :key="item"
+                    :value="item"
+                  >
+                    {{ item }}
+                  </option>
                 </select>
                    <div
                   v-if="isValid && !$v.proveedor.tipo_doc.required"
@@ -262,6 +269,7 @@ export default {
       tituloModal: "",
       proveedores: [],
       isValid: false,
+      items_tipo_doc: ['DNI', 'CUIT'],
     };
   },
 
@@ -394,13 +402,13 @@ export default {
       } else {
         this.id = 0;
         this.tituloModal = "Crear Proveedor";
-        this.proveedor.nombre = data.nombre;
-        this.proveedor.tipo_doc = data.tipo_doc;
-        this.proveedor.num_doc = data.num_doc;
-        this.proveedor.ciudad = data.ciudad;
-        this.proveedor.direccion = data.direccion;
-        this.proveedor.email = data.email;
-        this.proveedor.telefono = data.telefono;
+        this.proveedor.nombre = "";
+        this.proveedor.tipo_doc = "";
+        this.proveedor.num_doc = "";
+        this.proveedor.ciudad = "";
+        this.proveedor.direccion = "";
+        this.proveedor.email = "";
+        this.proveedor.telefono = "";
       }
     },
     cerrarModal() {
