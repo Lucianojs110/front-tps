@@ -123,8 +123,8 @@
                   v-model="usuarios.cpassword"
                   type="password"
                   class="form-control"
-                  id="password"
-                  placeholder="Ingrese una contraseña"
+                  id="cpassword"
+                  placeholder="Ingrese confirmación contraseña"
                   :class="{ 'is-invalid':  isValid && $v.usuarios.cpassword.$error  }"
                 />
                  <div v-if="isValid && !$v.usuarios.cpassword.required" class="invalid-feedback">
@@ -169,7 +169,7 @@
             <template v-slot:header>
               <b-row align-v="center">
                 <b-col>
-                  <h3 class="mb-0">Usuarios</h3>
+                  <h3 class="mb-0">Listado de Usuarios</h3>
                 </b-col>
                 <b-col class="text-right">
                   <base-button
@@ -184,7 +184,7 @@
                 </b-col>
               </b-row>
             </template>
-
+            <div class="table-responsive">
             <table class="table" id="table">
               <thead>
                 <tr>
@@ -224,6 +224,7 @@
                 </tr>
               </tbody>
             </table>
+            </div>
           </b-card>
         </b-col>
       </b-row>
@@ -315,6 +316,13 @@ export default {
       let self = this;
 
       if (this.modificar) {
+        
+        this.isValid = true;
+        this.$v.$touch();
+        if (this.$v.$invalid) {
+          return;
+        }
+
         axios
           .put(
             process.env.VUE_APP_RUTA_API + "users/" + this.id,
@@ -336,7 +344,6 @@ export default {
         
         this.isValid = true;
         this.$v.$touch();
-        
         if (this.$v.$invalid) {
           return;
         }
@@ -358,6 +365,7 @@ export default {
           });
       }
     },
+
     eliminar(id) {
       swal({
         title: "¿ Esta seguro ?",
