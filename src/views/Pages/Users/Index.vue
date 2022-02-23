@@ -62,6 +62,7 @@
                   type="text"
                   class="form-control"
                   id="email"
+                  autocomplete="off"
                   placeholder="Ingrese una direccion de email"
                   :class="{ 'is-invalid': v_email || isValid && $v.usuarios.email.$error  }"
                 />
@@ -108,6 +109,7 @@
                   class="form-control"
                   id="password"
                   placeholder="Ingrese una contraseña"
+                  autocomplete="off"
                    :class="{ 'is-invalid':  isValid && $v.usuarios.password.$error  }"
                 />
                 <div v-if="isValid && !$v.usuarios.password.required" class="invalid-feedback">
@@ -124,6 +126,7 @@
                   type="password"
                   class="form-control"
                   id="cpassword"
+                  autocomplete="off"
                   placeholder="Ingrese confirmación contraseña"
                   :class="{ 'is-invalid':  isValid && $v.usuarios.cpassword.$error  }"
                 />
