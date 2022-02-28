@@ -60,7 +60,7 @@
           
           <b-dropdown-item href="#!">
             <i class="ni ni-user-run"></i>
-            <span>Salir</span>
+            <span @click="closeSession()">Salir</span>
           </b-dropdown-item>
 
         </template>
@@ -71,6 +71,7 @@
 <script>
 import { CollapseTransition } from 'vue2-transitions';
 import { BaseNav, Modal } from '@/components';
+import { mapActions} from 'vuex';
 
 export default {
   components: {
@@ -109,7 +110,16 @@ export default {
     },
     closeDropDown() {
       this.activeNotifications = false;
-    }
+    },
+    closeSession(){
+      this.outLogin()
+      localStorage.clear();
+      this.$router.push('/login');
+    },
+      ...mapActions([
+    'outLogin',
+    ])
+
   }
 };
 </script>
