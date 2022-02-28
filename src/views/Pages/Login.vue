@@ -15,7 +15,6 @@
         <b-col lg="5" md="7">
           <b-card no-body class="bg-secondary border-0 mb-0">
             <b-card-header class="bg-transparent pb-2"  >
-             
               <div class="btn-wrapper text-center">
            <img src="@/assets/logo.png" id="icon" alt="User Icon"  height="250px" width="250px"/>
               </div>
@@ -47,10 +46,6 @@
                   </div>
                 </form>
 
-                  <div class="alert alert-danger" role="alert" v-if="error">
-                   {{error_msg}}
-                </div>
-             
             </b-card-body>
           </b-card>
           <b-row class="mt-3">
@@ -62,12 +57,13 @@
           </b-row>
         </b-col>
       </b-row>
-    >
+    
     </b-container>
   </div>
 </template>
 <script>
 import axios from 'axios';
+import { mapActions} from 'vuex';
   export default {
     data() {
       return {
@@ -90,17 +86,22 @@ import axios from 'axios';
         .then( data =>{
             console.log(data)
            if(data.data.access_token){
+              this.$toastr.s("Ingreso Exitoso");
+              this.inLogin()
               localStorage.token = data.data.access_token;
               localStorage.name = data.data.user.name;
               localStorage.last_name = data.data.user.last_name;
-              console.log(localStorage.name)
               this.$router.push('dashboard');
            }else{
              this.error = true;
-             this.error_msg = data.data.message;
+             this.$toastr.e("Error", data.data.message);
            }
         })
-    }
+    },
+     ...mapActions([
+    'inLogin',
+  ])
   }
+ 
   };
 </script>

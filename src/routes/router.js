@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from './routes';
+import store from '../store'
 
 Vue.use(VueRouter);
 
@@ -16,6 +17,18 @@ const router = new VueRouter({
       return { selector: to.hash };
     }
     return { x: 0, y: 0 };
+  }
+});
+
+router.beforeEach( (to, from, next) =>{
+  if (to.matched.some( route => route.meta.requiresAuth)) {
+    if (!store.state.loggedIn) {
+      next('/login')
+    }else {
+      next()
+    }
+  }else {
+    next()
   }
 });
 

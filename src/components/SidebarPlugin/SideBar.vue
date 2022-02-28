@@ -12,17 +12,7 @@
 
             <slot name="mobile-right">
                 <ul class="nav align-items-center d-md-none">
-                    <base-dropdown class="nav-item" menu-on-right tag="li" title-tag="a">
-                        <a slot="title-container" class="nav-link nav-link-icon" href="#" role="button"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="ni ni-bell-55"></i>
-                        </a>
-
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </base-dropdown>
+       
                     <base-dropdown class="nav-item" menu-on-right tag="li" title-tag="a">
                         <a slot="title-container" class="nav-link" href="#" role="button">
                             <div class="media align-items-center">
@@ -33,28 +23,21 @@
                         </a>
 
                         <div class=" dropdown-header noti-title">
-                            <h6 class="text-overflow m-0">Welcome!</h6>
+                            <h6 class="text-overflow m-0">Bienvenido!</h6>
                         </div>
                         <router-link to="/profile" class="dropdown-item">
                             <i class="ni ni-single-02"></i>
-                            <span>My profile</span>
+                            <span>Mi perfil</span>
                         </router-link>
                         <router-link to="/profile" class="dropdown-item">
                             <i class="ni ni-settings-gear-65"></i>
-                            <span>Settings</span>
+                            <span>Opciones</span>
                         </router-link>
-                        <router-link to="/profile" class="dropdown-item">
-                            <i class="ni ni-calendar-grid-58"></i>
-                            <span>Activity</span>
-                        </router-link>
-                        <router-link to="/profile" class="dropdown-item">
-                            <i class="ni ni-support-16"></i>
-                            <span>Support</span>
-                        </router-link>
+                       
                         <div class="dropdown-divider"></div>
                         <a href="#!" class="dropdown-item">
                             <i class="ni ni-user-run"></i>
-                            <span>Logout</span>
+                            <span @click="closeSession()">Salir</span>
                         </a>
                     </base-dropdown>
                 </ul>
@@ -86,16 +69,16 @@
                 <!--Navigation-->
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/usuarios"><i class="ni ni-single-02"></i>Usuarios</router-link>
+                        <router-link class="nav-link" to="/usuarios" @click.native="closeSidebar"><i class="ni ni-single-02"></i>Usuarios</router-link>
                     </li>
                     <li class="nav-item">
-                         <router-link class="nav-link" to="/roles"><i class="ni ni-tag"></i>Roles</router-link>
+                         <router-link class="nav-link" to="/roles" @click.native="closeSidebar"><i class="ni ni-tag"></i>Roles</router-link>
                     </li>
                      <li class="nav-item">
-                         <router-link class="nav-link" to="/clientes"><i class="ni ni-briefcase-24"></i>Clientes</router-link>
+                         <router-link class="nav-link" to="/clientes" @click.native="closeSidebar"><i class="ni ni-briefcase-24"></i>Clientes</router-link>
                     </li>
                      <li class="nav-item">
-                         <router-link class="nav-link" to="/proveedores"><i class="ni ni-briefcase-24"></i>Proveedores</router-link>
+                         <router-link class="nav-link" to="/proveedores" @click.native="closeSidebar"><i class="ni ni-briefcase-24"></i>Proveedores</router-link>
                     </li>
                 </ul>
 
@@ -124,7 +107,8 @@
     </nav>
 </template>
 <script>
-  import NavbarToggleButton from '@/components/NavbarToggleButton'
+  import NavbarToggleButton from '@/components/NavbarToggleButton';
+  import { mapActions} from 'vuex';
 
   export default {
     name: 'sidebar',
@@ -154,12 +138,21 @@
       },
       showSidebar() {
         this.$sidebar.displaySidebar(true)
-      }
+      },
+       closeSession(){
+      this.outLogin()
+      localStorage.clear();
+      this.$router.push('/login');
+    },
+      ...mapActions([
+    'outLogin',
+    ])
     },
     beforeDestroy() {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.showSidebar = false;
       }
-    }
+    },
+     
   };
 </script>

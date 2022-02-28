@@ -6,15 +6,23 @@ import router from "./routes/router";
 import VueAxios from "vue-axios";
 import Axios from "axios";
 import Vuelidate from 'vuelidate';
-// plugin setup
+import store from './store';
+import VueToastr from "vue-toastr";
+
 Vue.use(DashboardPlugin);
 Vue.use(VueAxios, Axios);
 Vue.use(Vuelidate);
-/* Vue.use(sweetalert); */
+Vue.use(VueToastr);
 
-/* eslint-disable no-new */
+
+
 new Vue({
   el: "#app",
   render: h => h(App),
-  router
+  router, 
+  store
+  
 });
+
+
+
