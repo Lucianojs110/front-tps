@@ -49,6 +49,12 @@ const routes = [
         name: "proveedores",
         component: () => import("../views/Pages/Proveedores/Index.vue"),
         meta: { requiresAuth: true}
+      },
+      {
+        path: "/ingresos",
+        name: "ingresos-cala",
+        component: () => import("../views/Pages/Ingresos/Index.vue"),
+        meta: { requiresAuth: true}
       }
     ]
   },

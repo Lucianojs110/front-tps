@@ -87,7 +87,7 @@
                 <!--Navigation-->
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/cala"><i class="ni ni-curved-next"></i>Cala</router-link>
+                        <router-link class="nav-link" to="/ingresos"  @click.native="closeSidebar"><i class="ni ni-curved-next"></i>Cala</router-link>
                     </li>
                     <li class="nav-item">
                          <router-link class="nav-link" to="/produccion"><i class="ni ni-chart-bar-32"></i>Producción</router-link>
