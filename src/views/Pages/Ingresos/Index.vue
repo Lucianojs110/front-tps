@@ -53,18 +53,143 @@
                 </div>
               </div>
 
-              <div class="col-md-3">
-                <label>fecha</label>
-                  <input
-                  v-model="ingreso.fecha_entrada"
+              <div class="col-md-6">
+                <label>Tipo de Grano</label>
+
+                <select
+                  id="tipo_doc"
+                  v-model="ingreso.id_tipo_grano"
+                  class="form-control"
+                  :class="{
+                    'is-invalid': isValid && $v.ingreso.id_tipo_grano.$error,
+                  }"
+                >
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="1">Soja</option>
+                  <option value="2">Girasol</option>
+                  <option value="3">Maíz</option>
+                </select>
+                <div
+                  v-if="isValid && !$v.ingreso.id_proveedor.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Cantidad (kg.)</label>
+                <input
+                  v-model="ingreso.cantidad"
+                  type="number"
+                  class="form-control"
+                  id="cantidad"
+                  placeholder="Ingrese la cantidad en kilogramos"
+                  :class="{
+                    'is-invalid': isValid && $v.ingreso.cantidad.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.ingreso.cantidad.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label>Humedad</label>
+                <input
+                  v-model="ingreso.humedad"
+                  type="number"
+                  class="form-control"
+                  id="humedad"
+                  placeholder="Ingrese la Humedad"
+                  :class="{
+                    'is-invalid': isValid && $v.ingreso.humedad.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.ingreso.humedad.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Condición</label>
+                <select
+                  id="condicion"
+                  v-model="ingreso.condicion"
+                  class="form-control"
+                  :class="{
+                    'is-invalid': isValid && $v.ingreso.condicion.$error,
+                  }"
+                >
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="sucia">Sucia</option>
+                  <option value="limpia">Limpia</option>
+                  <option value="partida">Partida</option>
+                </select>
+                <div
+                  v-if="isValid && !$v.ingreso.condicion.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label>Numero Carta Porte</label>
+                <input
+                  v-model="ingreso.num_carta_porte"
                   type="text"
                   class="form-control"
-                  id="num_doc"
-                  placeholder="Numero de CUIT o DNI"
+                  id="carta_porte"
+                  placeholder="Ingrese carta porte"
+                  :class="{
+                    'is-invalid': isValid && $v.ingreso.num_carta_porte.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.ingreso.num_carta_porte.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Fecha de cala</label>
+
+                <b-datepicker
+                  v-model="ingreso.fecha_entrada"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Click to select..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
                   :class="{
                     'is-invalid': isValid && $v.ingreso.fecha_entrada.$error,
                   }"
-                />
+                >
+                </b-datepicker>
+
                 <div
                   v-if="isValid && !$v.ingreso.fecha_entrada.required"
                   class="invalid-feedback"
@@ -73,18 +198,19 @@
                 </div>
               </div>
 
-           <div class="col-md-3">
-                <label>Hora</label>
-                  <input
-                  v-model="ingreso.hora_entrada"
-                  type="text"
-                  class="form-control"
-                  id="num_doc"
-                  placeholder="Numero de CUIT o DNI"
-                  :class="{
+              <div class="col-md-6">
+                <label>Hora de cala</label>
+                <b-col md="auto">
+                  <b-time
+                    v-model="ingreso.hora_entrada"
+                    locale="es"
+                    @context="TimeOnContext"
+                    :class="{
                     'is-invalid': isValid && $v.ingreso.hora_entrada.$error,
                   }"
-                />
+                  ></b-time>
+                </b-col>
+
                 <div
                   v-if="isValid && !$v.ingreso.hora_entrada.required"
                   class="invalid-feedback"
@@ -94,10 +220,6 @@
               </div>
             </div>
             <!-- Fin Fila -->
-
-         
-
-         
           </div>
 
           <!-- Modal footer -->
@@ -144,8 +266,8 @@
                     type="primary"
                     >Nuevo Ingreso</base-button
                   >
-                  
-                  <b-form-input 
+
+                  <b-form-input
                     v-model="filter"
                     type="search"
                     placeholder="Buscar"
@@ -194,6 +316,10 @@
     </b-container>
   </div>
 </template>
+
+<script src="https://unpkg.com/vue@2.6.2/dist/vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.js"></script>
+
 <script>
 import axios from "axios";
 import { required, minLength } from "vuelidate/lib/validators";
@@ -203,6 +329,17 @@ export default {
     rows() {
       return this.items.length;
     },
+  },
+  TimeOnContext: {
+    locale: "es-ES",
+    isRTL: false,
+    hourCycle: "h12",
+    hour12: true,
+    hours: null,
+    minutes: null,
+    seconds: 0,
+    value: "",
+    formatted: "Seleccione...",
   },
   data() {
     return {
@@ -217,7 +354,9 @@ export default {
         "humedad",
         "acciones",
       ],
-
+      selected: new Date(),
+      showWeekNumber: false,
+      locale: "es-ES",
       perPage: 4,
       currentPage: 1,
       filter: "",
@@ -237,7 +376,7 @@ export default {
       modal: 0,
       tituloModal: "",
       isValid: false,
-      proveedores:[]
+      proveedores: [],
     };
   },
 
@@ -264,12 +403,18 @@ export default {
       humedad: {
         required,
       },
+      num_carta_porte: {
+        required,
+      },
     },
   },
 
   methods: {
     selectCategory(event) {
       console.log(event.target.value);
+    },
+    clearDate() {
+      this.selected = null;
     },
 
     listar_ingresos() {
@@ -391,11 +536,10 @@ export default {
         this.ingreso.cantidad = items.cantidad;
         this.ingreso.condicion = items.condicion;
         this.ingreso.humedad = items.humedad;
-     
       } else {
         this.id = 0;
         this.tituloModal = "Crear Ingreso";
-    this.ingreso.id_proveedor = "";
+        this.ingreso.id_proveedor = "";
         this.ingreso.fecha_entrada = "";
         this.ingreso.hora_entrada = "";
         this.ingreso.id_tipo_grano = "";
