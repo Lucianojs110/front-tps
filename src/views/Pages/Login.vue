@@ -82,7 +82,7 @@ import { mapActions} from 'vuex';
           "email" : this.model.email,
           "password": this.model.password
         };
-        axios.post(process.env.VUE_APP_RUTA_API+'login', json)
+        axios.post('https://back-tps.inteligent.online/'+'login', json)
         .then( data =>{
             console.log(data)
            if(data.data.access_token){
