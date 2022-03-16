@@ -259,10 +259,20 @@
                   id="rechazado"
                   v-model="ingreso.rechazado"
                   class="form-control"
+                  :class="{
+                      'is-invalid': isValid && $v.ingreso.rechazado.$error,
+                    }"
                 >
+                  <option selected disabled value="">Seleccione...</option>
                   <option value="no">No</option>
                   <option value="si">Si</option>
                 </select>
+                  <div
+                  v-if="isValid && !$v.ingreso.rechazado.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
             
               </div>
             </div>
@@ -470,6 +480,9 @@ export default {
         required,
       },
       densidad: {
+        required,
+      },
+      rechazado: {
         required,
       },
     },
