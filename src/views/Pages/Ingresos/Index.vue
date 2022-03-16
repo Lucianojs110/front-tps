@@ -342,11 +342,21 @@
                   {{ data.item.proveedor.nombre }}
                 </template>
                 <template v-slot:cell(acciones)="data">
-                  <b-button
-                    variant="danger btn-sm"
-                    @clic="eliminar(data.item.id)"
-                    >Eliminar</b-button
-                  >
+                  <button
+                        @click="
+                          modificar = true;
+                          abrirModal(data.item);
+                        "
+                        class="btn btn-secondary btn-sm"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        @click="eliminar(data.item.id)"
+                        class="btn btn-danger btn-sm"
+                      >
+                        Eliminar
+                      </button>
                 </template>
               </b-table>
               <b-pagination
@@ -516,7 +526,7 @@ export default {
         axios
           .put(
             process.env.VUE_APP_RUTA_API + "ingreso/" + this.id,
-            this.proveedor,
+            this.ingreso,
             {
               headers: { Authorization: "Bearer " + localStorage.token },
             }
@@ -525,6 +535,7 @@ export default {
             this.cerrarModal();
             this.listar_ingresos();
             swal("Exito!", "El Ingreso se ha modificado!", "success");
+            this.$v.$reset();
           })
           .catch(function (error) {
             var array = Object.values(error.response.data.errors + "<br>");
@@ -545,7 +556,7 @@ export default {
           .then((res) => {
             this.cerrarModal();
             this.listar_ingresos();
-            swal("Exito!", "El Proveedor se ha creado!", "success");
+            swal("Exito!", "El Ingreso se ha creado con exito!", "success");
             this.$v.$reset();
           })
           .catch(function (error) {
@@ -558,19 +569,19 @@ export default {
     eliminar(id) {
       swal({
         title: "¿ Esta seguro ?",
-        text: "El Proveedor será eliminado definitavemente!",
+        text: "El Ingreso será eliminado definitavemente!",
         icon: "warning",
         buttons: ["Cancelar", " Si "],
       }).then((willDelete) => {
         if (willDelete) {
           axios
-            .delete(process.env.VUE_APP_RUTA_API + "proveedores/" + id, {
+            .delete(process.env.VUE_APP_RUTA_API + "ingreso/" + id, {
               headers: { Authorization: "Bearer " + localStorage.token },
             })
             .then((res) => {
               this.cerrarModal();
-              this.listar_proveedores();
-              swal("Exito!", "El Proveedor se ha eliminado!", "success");
+              this.listar_ingresos();
+              swal("Exito!", "El Ingreso se ha eliminado!", "success");
             })
             .catch(function (error) {
               var array = Object.values(error.response.data.errors);
@@ -583,18 +594,20 @@ export default {
     abrirModal(data = {}) {
       this.modal = 1;
       if (this.modificar) {
+        console.log('hola',data);
         this.id = data.id;
         this.tituloModal = "Modificar Ingreso";
-        this.ingreso.id_proveedor = items.id_proveedor;
-        this.ingreso.fecha_entrada = items.fecha_entrada;
-        this.ingreso.hora_entrada = items.hora_entrada;
-        this.ingreso.id_tipo_grano = items.id_tipo_grano;
-        this.ingreso.cantidad = items.cantidad;
-        this.ingreso.condicion = items.condicion;
-        this.ingreso.humedad = items.humedad;
-        this.ingreso.densidad = items.densidad;
-        this.ingreso.patente_transporte = items.patente_transporte;
-        this.ingreso.rechazado = items.rechazado;
+        this.ingreso.id_proveedor = data.id_proveedor;
+        this.ingreso.fecha_entrada = data.fecha_entrada;
+        this.ingreso.hora_entrada = data.hora_entrada;
+        this.ingreso.id_tipo_grano = data.id_tipo_grano;
+        this.ingreso.cantidad = data.cantidad;
+        this.ingreso.num_carta_porte = data.num_carta_porte;
+        this.ingreso.condicion = data.condicion;
+        this.ingreso.humedad = data.humedad;
+        this.ingreso.densidad = data.densidad;
+        this.ingreso.patente_transporte = data.patente_transporte;
+        this.ingreso.rechazado = data.rechazado;
       } else {
         this.id = 0;
         this.tituloModal = "Crear Ingreso";
@@ -603,6 +616,7 @@ export default {
         this.ingreso.hora_entrada = "";
         this.ingreso.id_tipo_grano = "";
         this.ingreso.cantidad = "";
+        this.ingreso.num_carta_porte = "";
         this.ingreso.condicion = "";
         this.ingreso.humedad = "";
         this.ingreso.densidad = "";
