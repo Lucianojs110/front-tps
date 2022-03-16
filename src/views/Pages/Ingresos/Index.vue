@@ -5,7 +5,7 @@
     </base-header>
 
     <!-- The Modal -->
-    <div class="modal" :class="{ mostrar: modal }">
+    <div class="modal" :class="{ mostrar: modal }" style="overflow-y: scroll">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <!-- Modal Header -->
@@ -100,21 +100,20 @@
                   El campo es requerido
                 </div>
               </div>
-
               <div class="col-md-6">
-                <label>Humedad</label>
+                <label>Numero Carta Porte</label>
                 <input
-                  v-model="ingreso.humedad"
-                  type="number"
+                  v-model="ingreso.num_carta_porte"
+                  type="text"
                   class="form-control"
-                  id="humedad"
-                  placeholder="Ingrese la Humedad"
+                  id="carta_porte"
+                  placeholder="Ingrese carta porte"
                   :class="{
-                    'is-invalid': isValid && $v.ingreso.humedad.$error,
+                    'is-invalid': isValid && $v.ingreso.num_carta_porte.$error,
                   }"
                 />
                 <div
-                  v-if="isValid && !$v.ingreso.humedad.required"
+                  v-if="isValid && !$v.ingreso.num_carta_porte.required"
                   class="invalid-feedback"
                 >
                   El campo es requerido
@@ -147,24 +146,59 @@
                   El campo es requerido
                 </div>
               </div>
+
               <div class="col-md-6">
-                <label>Numero Carta Porte</label>
+                <label>Factor Humedad</label>
                 <input
-                  v-model="ingreso.num_carta_porte"
-                  type="text"
+                  v-model="ingreso.humedad"
+                  type="number"
                   class="form-control"
-                  id="carta_porte"
-                  placeholder="Ingrese carta porte"
+                  id="humedad"
+                  placeholder="Ingrese la Humedad"
                   :class="{
-                    'is-invalid': isValid && $v.ingreso.num_carta_porte.$error,
+                    'is-invalid': isValid && $v.ingreso.humedad.$error,
                   }"
                 />
                 <div
-                  v-if="isValid && !$v.ingreso.num_carta_porte.required"
+                  v-if="isValid && !$v.ingreso.humedad.required"
                   class="invalid-feedback"
                 >
                   El campo es requerido
                 </div>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Factor de Densidad</label>
+                <input
+                  v-model="ingreso.densidad"
+                  type="text"
+                  class="form-control"
+                  id="carta_porte"
+                  placeholder="Ingrese factor densidad"
+                  :class="{
+                    'is-invalid': isValid && $v.ingreso.densidad.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.ingreso.densidad.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label>Patente Transporte</label>
+                <input
+                  v-model="ingreso.patente_transporte"
+                  type="text"
+                  class="form-control"
+                  id="carta_porte"
+                  placeholder="Ingrese patente transporte"
+                />
               </div>
             </div>
             <!-- Fin Fila -->
@@ -198,7 +232,7 @@
                 </div>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-3">
                 <label>Hora de cala</label>
                 <b-col md="auto">
                   <b-time
@@ -206,8 +240,8 @@
                     locale="es"
                     @context="TimeOnContext"
                     :class="{
-                    'is-invalid': isValid && $v.ingreso.hora_entrada.$error,
-                  }"
+                      'is-invalid': isValid && $v.ingreso.hora_entrada.$error,
+                    }"
                   ></b-time>
                 </b-col>
 
@@ -217,6 +251,19 @@
                 >
                   El campo es requerido
                 </div>
+              </div>
+
+            <div class="col-md-3">
+                <label>Rechazado</label>
+                <select
+                  id="rechazado"
+                  v-model="ingreso.rechazado"
+                  class="form-control"
+                >
+                  <option value="no">No</option>
+                  <option value="si">Si</option>
+                </select>
+            
               </div>
             </div>
             <!-- Fin Fila -->
@@ -352,6 +399,9 @@ export default {
         "cantidad",
         "condicion",
         "humedad",
+        "densidad",
+        "rechazado",
+        "patente_transporte",
         "acciones",
       ],
       selected: new Date(),
@@ -368,6 +418,9 @@ export default {
         cantidad: "",
         condicion: "",
         humedad: "",
+        densidad: "",
+        patente_transporte: "",
+        rechazado: "",
         num_carta_porte: "",
       },
 
@@ -404,6 +457,9 @@ export default {
         required,
       },
       num_carta_porte: {
+        required,
+      },
+      densidad: {
         required,
       },
     },
@@ -467,7 +523,7 @@ export default {
           )
           .then((res) => {
             this.cerrarModal();
-            this.listar_proveedores();
+            this.listar_ingresos();
             swal("Exito!", "El Ingreso se ha modificado!", "success");
           })
           .catch(function (error) {
@@ -483,12 +539,12 @@ export default {
         }
 
         axios
-          .post(process.env.VUE_APP_RUTA_API + "proveedores", this.proveedor, {
+          .post(process.env.VUE_APP_RUTA_API + "ingreso", this.ingreso, {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((res) => {
             this.cerrarModal();
-            this.listar_proveedores();
+            this.listar_ingresos();
             swal("Exito!", "El Proveedor se ha creado!", "success");
             this.$v.$reset();
           })
@@ -536,6 +592,9 @@ export default {
         this.ingreso.cantidad = items.cantidad;
         this.ingreso.condicion = items.condicion;
         this.ingreso.humedad = items.humedad;
+        this.ingreso.densidad = items.densidad;
+        this.ingreso.patente_transporte = items.patente_transporte;
+        this.ingreso.rechazado = items.rechazado;
       } else {
         this.id = 0;
         this.tituloModal = "Crear Ingreso";
@@ -546,6 +605,9 @@ export default {
         this.ingreso.cantidad = "";
         this.ingreso.condicion = "";
         this.ingreso.humedad = "";
+        this.ingreso.densidad = "";
+        this.ingreso.patente_transporte = "";
+        this.ingreso.rechazado = "";
       }
     },
     cerrarModal() {
