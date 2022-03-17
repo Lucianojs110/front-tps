@@ -4,7 +4,7 @@
       <!-- Card stats -->
     </base-header>
     <!-- Modal -->
-    <div class="modal" :class="{ mostrar: modal }">
+    <div class="modal" :class="{ mostrar: modal }" style="overflow-y: scroll">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
           <!-- Modal Header -->

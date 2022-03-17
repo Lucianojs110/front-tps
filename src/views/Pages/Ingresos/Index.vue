@@ -4,7 +4,225 @@
       <!-- Card stats -->
     </base-header>
 
-    <!-- The Modal -->
+ <!-- Modal Ver datos -->
+   <div class="modal" :class="{ mostrar: modalVista }" style="overflow-y: scroll">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">{{ tituloModal }}</h4>
+            <button
+              @click="cerrarModalVista()"
+              type="button"
+              class="close"
+              data-dismiss="modal"
+            >
+              &times;
+            </button>
+          </div>
+
+               <!-- Modal body -->
+          <div class="modal-body">
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Proveedor</label>
+                <select
+                  id="tipo_doc"
+                  v-model="ingreso.id_proveedor"
+                  class="form-control"
+                  disabled
+                >
+                  <option selected disabled value="">Seleccione...</option>
+                  <option
+                    selected
+                    v-for="proveedor in proveedores"
+                    :key="proveedor.id"
+                    :value="proveedor.id"
+                  >
+                    {{ proveedor.nombre }}
+                  </option>
+                </select>
+            
+              </div>
+
+              <div class="col-md-6">
+                <label>Tipo de Grano</label>
+
+                <select
+                  id="tipo_doc"
+                  v-model="ingreso.id_tipo_grano"
+                  class="form-control"
+                  disabled
+                >
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="1">Soja</option>
+                  <option value="2">Girasol</option>
+                  <option value="3">Maíz</option>
+                </select>
+           
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Cantidad (kg.)</label>
+                <input
+                  v-model="ingreso.cantidad"
+                  type="number"
+                  class="form-control"
+                  id="cantidad"
+                  placeholder="Ingrese la cantidad en kilogramos"
+                  disabled
+                />
+              </div>
+              <div class="col-md-6">
+                <label>Numero Carta Porte</label>
+                <input
+                  v-model="ingreso.num_carta_porte"
+                  type="text"
+                  class="form-control"
+                  id="carta_porte"
+                  placeholder="Ingrese carta porte"
+                  disabled
+                />
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Condición</label>
+                <select
+                  id="condicion"
+                  v-model="ingreso.condicion"
+                  class="form-control"
+                  disabled
+                >
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="Sucia">Sucia</option>
+                  <option value="Limpia">Limpia</option>
+                  <option value="Partida">Partida</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label>Factor Humedad</label>
+                <input
+                  v-model="ingreso.humedad"
+                  type="number"
+                  class="form-control"
+                  id="humedad"
+                  placeholder="Ingrese la Humedad"
+                 disabled
+                />
+                
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Factor de Densidad</label>
+                <input
+                  v-model="ingreso.densidad"
+                  type="text"
+                  class="form-control"
+                  id="carta_porte"
+                  placeholder="Ingrese factor densidad"
+                 disabled
+                />
+              </div>
+              <div class="col-md-6">
+                <label>Patente Transporte</label>
+                <input
+                  v-model="ingreso.patente_transporte"
+                  type="text"
+                  class="form-control"
+                  id="carta_porte"
+                  placeholder="Ingrese patente transporte"
+                  disabled
+                />
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Fecha de cala</label>
+
+                <b-datepicker
+                  v-model="ingreso.fecha_entrada"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione la fecha..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  disabled
+                >
+                </b-datepicker>
+              </div>
+
+              <div class="col-md-3">
+                <label>Hora de cala</label>
+                <b-col md="auto">
+               
+                   <input
+                  v-model="ingreso.hora_entrada"
+                  type="text"
+                  class="form-control"
+                  id="carta_porte"
+               
+                  disabled
+                />
+                </b-col>
+              </div>
+
+            <div class="col-md-3">
+                <label>Rechazado</label>
+                <select
+                  id="rechazado"
+                  v-model="ingreso.rechazado"
+                  class="form-control"
+                  disabled
+                >
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="No">No</option>
+                  <option value="Si">Si</option>
+                </select>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button
+              @click="cerrarModalVista()"
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancelar
+            </button>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Modal Crear y Editar -->
     <div class="modal" :class="{ mostrar: modal }" style="overflow-y: scroll">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -135,9 +353,9 @@
                   }"
                 >
                   <option selected disabled value="">Seleccione...</option>
-                  <option value="sucia">Sucia</option>
-                  <option value="limpia">Limpia</option>
-                  <option value="partida">Partida</option>
+                  <option value="Sucia">Sucia</option>
+                  <option value="Limpia">Limpia</option>
+                  <option value="Partida">Partida</option>
                 </select>
                 <div
                   v-if="isValid && !$v.ingreso.condicion.required"
@@ -212,7 +430,7 @@
                   v-model="ingreso.fecha_entrada"
                   :show-week-number="showWeekNumber"
                   :locale="locale"
-                  placeholder="Click to select..."
+                  placeholder="Seleccione la fecha..."
                   icon="calendar-today"
                   :icon-right="selected ? 'close-circle' : ''"
                   icon-right-clickable
@@ -238,7 +456,6 @@
                   <b-time
                     v-model="ingreso.hora_entrada"
                     locale="es"
-                    @context="TimeOnContext"
                     :class="{
                       'is-invalid': isValid && $v.ingreso.hora_entrada.$error,
                     }"
@@ -264,8 +481,8 @@
                     }"
                 >
                   <option selected disabled value="">Seleccione...</option>
-                  <option value="no">No</option>
-                  <option value="si">Si</option>
+                  <option value="No">No</option>
+                  <option value="Si">Si</option>
                 </select>
                   <div
                   v-if="isValid && !$v.ingreso.rechazado.required"
@@ -352,7 +569,16 @@
                   {{ data.item.proveedor.nombre }}
                 </template>
                 <template v-slot:cell(acciones)="data">
-                  <button
+                      <button
+                        @click="
+                          modificar = true;
+                          abrirModalVista(data.item);
+                        "
+                        class="btn btn-success btn-sm"
+                      >
+                        Ver
+                      </button>
+                      <button
                         @click="
                           modificar = true;
                           abrirModal(data.item);
@@ -389,24 +615,13 @@
 
 <script>
 import axios from "axios";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required  } from "vuelidate/lib/validators";
 export default {
   props: ["items"],
   computed: {
     rows() {
       return this.items.length;
     },
-  },
-  TimeOnContext: {
-    locale: "es-ES",
-    isRTL: false,
-    hourCycle: "h12",
-    hour12: true,
-    hours: null,
-    minutes: null,
-    seconds: 0,
-    value: "",
-    formatted: "Seleccione...",
   },
   data() {
     return {
@@ -415,13 +630,9 @@ export default {
         "grano",
         "proveedor",
         "fecha_entrada",
-        "hora_entrada",
         "cantidad",
         "condicion",
-        "humedad",
-        "densidad",
         "rechazado",
-        "patente_transporte",
         "acciones",
       ],
       selected: new Date(),
@@ -447,6 +658,7 @@ export default {
       id: 0,
       modificar: true,
       modal: 0,
+      modalVista: 0,
       tituloModal: "",
       isValid: false,
       proveedores: [],
@@ -607,7 +819,6 @@ export default {
     abrirModal(data = {}) {
       this.modal = 1;
       if (this.modificar) {
-        console.log('hola',data);
         this.id = data.id;
         this.tituloModal = "Modificar Ingreso";
         this.ingreso.id_proveedor = data.id_proveedor;
@@ -636,6 +847,28 @@ export default {
         this.ingreso.patente_transporte = "";
         this.ingreso.rechazado = "";
       }
+    },
+
+      abrirModalVista(data = {}) {
+      this.modalVista = 1;
+       this.id = data.id;
+        this.tituloModal = "Ver datos Ingreso";
+        this.ingreso.id_proveedor = data.id_proveedor;
+        this.ingreso.fecha_entrada = data.fecha_entrada;
+        this.ingreso.hora_entrada = data.hora_entrada;
+        this.ingreso.id_tipo_grano = data.id_tipo_grano;
+        this.ingreso.cantidad = data.cantidad;
+        this.ingreso.num_carta_porte = data.num_carta_porte;
+        this.ingreso.condicion = data.condicion;
+        this.ingreso.humedad = data.humedad;
+        this.ingreso.densidad = data.densidad;
+        this.ingreso.patente_transporte = data.patente_transporte;
+        this.ingreso.rechazado = data.rechazado;
+
+    },
+
+     cerrarModalVista() {
+      this.modalVista = 0;
     },
     cerrarModal() {
       this.modal = 0;
