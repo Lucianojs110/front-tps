@@ -51,7 +51,7 @@
 
                 <select
                   id="tipo_doc"
-                  v-model="ingreso.id_tipo_grano"
+                  v-model="ingreso.id_producto"
                   class="form-control"
                   disabled
                 >
@@ -218,7 +218,7 @@
         </div>
       </div>
     </div>
-
+  <!-- Fin modal vista -->
 
 
 
@@ -276,10 +276,10 @@
 
                 <select
                   id="tipo_doc"
-                  v-model="ingreso.id_tipo_grano"
+                  v-model="ingreso.id_producto"
                   class="form-control"
                   :class="{
-                    'is-invalid': isValid && $v.ingreso.id_tipo_grano.$error,
+                    'is-invalid': isValid && $v.ingreso.id_producto.$error,
                   }"
                 >
                   <option selected disabled value="">Seleccione...</option>
@@ -288,7 +288,7 @@
                   <option value="3">Maíz</option>
                 </select>
                 <div
-                  v-if="isValid && !$v.ingreso.id_proveedor.required"
+                  v-if="isValid && !$v.ingreso.id_producto.required"
                   class="invalid-feedback"
                 >
                   El campo es requerido
@@ -574,7 +574,7 @@
                           modificar = true;
                           abrirModalVista(data.item);
                         "
-                        class="btn btn-success btn-sm"
+                        class="btn btn-light btn-sm"
                       >
                         Ver
                       </button>
@@ -676,7 +676,7 @@ export default {
       hora_entrada: {
         required,
       },
-      id_tipo_grano: {
+      id_producto: {
         required,
       },
       cantidad: {
@@ -824,7 +824,7 @@ export default {
         this.ingreso.id_proveedor = data.id_proveedor;
         this.ingreso.fecha_entrada = data.fecha_entrada;
         this.ingreso.hora_entrada = data.hora_entrada;
-        this.ingreso.id_tipo_grano = data.id_tipo_grano;
+        this.ingreso.id_producto = data.id_producto;
         this.ingreso.cantidad = data.cantidad;
         this.ingreso.num_carta_porte = data.num_carta_porte;
         this.ingreso.condicion = data.condicion;
@@ -838,7 +838,7 @@ export default {
         this.ingreso.id_proveedor = "";
         this.ingreso.fecha_entrada = "";
         this.ingreso.hora_entrada = "";
-        this.ingreso.id_tipo_grano = "";
+        this.ingreso.id_producto = "";
         this.ingreso.cantidad = "";
         this.ingreso.num_carta_porte = "";
         this.ingreso.condicion = "";
@@ -856,7 +856,7 @@ export default {
         this.ingreso.id_proveedor = data.id_proveedor;
         this.ingreso.fecha_entrada = data.fecha_entrada;
         this.ingreso.hora_entrada = data.hora_entrada;
-        this.ingreso.id_tipo_grano = data.id_tipo_grano;
+        this.ingreso.id_tipo_grano = data.id_producto;
         this.ingreso.cantidad = data.cantidad;
         this.ingreso.num_carta_porte = data.num_carta_porte;
         this.ingreso.condicion = data.condicion;
