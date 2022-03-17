@@ -562,8 +562,8 @@
                 :current-page="currentPage"
                 :filter="filter"
               >
-                <template v-slot:cell(grano)="data">
-                  {{ data.item.tipo_grano.nombre }}
+                <template v-slot:cell(producto)="data">
+                  {{ data.item.producto.nombre }}
                 </template>
                 <template v-slot:cell(proveedor)="data">
                   {{ data.item.proveedor.nombre }}
@@ -627,7 +627,7 @@ export default {
     return {
       fields: [
         "id",
-        "grano",
+        "producto",
         "proveedor",
         "fecha_entrada",
         "cantidad",
