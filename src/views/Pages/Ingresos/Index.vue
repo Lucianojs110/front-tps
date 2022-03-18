@@ -568,6 +568,9 @@
                 <template v-slot:cell(proveedor)="data">
                   {{ data.item.proveedor.nombre }}
                 </template>
+                 <template v-slot:cell(cantidad)="data">
+                  {{ data.item.cantidad }} kg.
+                </template>
                 <template v-slot:cell(acciones)="data">
                       <button
                         @click="
