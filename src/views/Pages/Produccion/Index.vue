@@ -217,6 +217,54 @@
                 </div>
               </div>
 
+              <br>
+
+              <div class="col-md-4">
+                <label>Fecha</label>
+
+                <b-datepicker
+                  v-model="produccion.fecha"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione la fecha..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :class="{
+                    'is-invalid': isValid && $v.produccion.fecha.$error,
+                  }"
+                >
+                </b-datepicker>
+                <div
+                  v-if="isValid && !$v.produccion.fecha.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+
+              </div>
+              <div class="col-md-3">
+                <label>Hora</label>
+                <b-col md="auto">
+                  <b-time
+                    v-model="produccion.hora"
+                    locale="es"
+                    :class="{
+                      'is-invalid': isValid && $v.produccion.hora.$error,
+                    }"
+                  ></b-time>
+                </b-col>
+
+                <div
+                  v-if="isValid && !$v.produccion.hora.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+
 
   
 
@@ -407,6 +455,12 @@ export default {
       },
       acciones: {
         required,
+      },
+      fecha: {
+        required,
+      },
+      hora: {
+        required,
       }, 
     },
  
@@ -439,7 +493,7 @@ export default {
 
   
     fin_prod() {
-        console.log(this.id)
+        console.log(this.id,this.finalizar)
      
         axios
           .put(
@@ -550,12 +604,16 @@ export default {
         this.produccion.id_producto = data.id_producto;
         this.produccion.acciones= data.acciones;
         this.produccion.cantidad = data.cantidad;
+        this.produccion.fecha = data.fecha;
+        this.produccion.hora = data.hora;
       } else {
       this.id = 0;
         this.tituloModal = "Ingresar a Producción";
         this.produccion.id_producto = "";
         this.produccion.acciones= "";
         this.produccion.cantidad = "";
+        this.produccion.fecha = "";
+        this.produccion.hora = "";
       }
       
     },
