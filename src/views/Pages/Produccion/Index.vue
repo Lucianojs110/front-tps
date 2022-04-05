@@ -552,6 +552,7 @@ export default {
             this.listar_produccion();
             swal("Exito!", "El registro se ha modificado!", "success");
             this.$v.$reset();
+            this.cerrarModal();
           })
           .catch(function (error) {
             var array = Object.values(error.response.data.errors + "<br>");
