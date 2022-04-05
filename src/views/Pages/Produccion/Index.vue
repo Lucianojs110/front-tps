@@ -91,6 +91,48 @@
                 </div>
               </div>
             </div>
+            
+                <label>Fecha</label>
+
+                <b-datepicker
+                  v-model="finalizar.fecha"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione la fecha..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :class="{
+                    'is-invalid': isValid && $v.finalizar.fecha.$error,
+                  }"
+                >
+                </b-datepicker>
+                <div
+                  v-if="isValid && !$v.finalizar.fecha.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+
+            
+            <label for="timepicker-valid">Seleccione la Hora</label>
+            <b-form-timepicker id="datepicker-valid" 
+            :state="true"
+            v-model="finalizar.hora"
+                    locale="es"
+                    :class="{
+                      'is-invalid': isValid && $v.finalizar.hora.$error,
+                    }"
+                    >
+            </b-form-timepicker>
+            <div
+                  v-if="isValid && !$v.finalizar.hora.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
             <!-- Fin Fila -->
           </div>
 
@@ -433,6 +475,8 @@ export default {
         cantidad_expeler: "",
         cantidad_aceite: "",
         cantidad_desactivada: "",
+        hora: "",
+        fecha: "",
       },
 
       id: 0,
@@ -628,6 +672,8 @@ export default {
         this.finalizar.id_producto = data.id_producto;
         this.finalizar.acciones= data.acciones;
         this.finalizar.cantidad = data.cantidad;
+        this.finalizar.fecha = data.fecha;
+        this.finalizar.hora = data.hora;
         if(data.id_producto==1){
           this.finalizar.producto = 'Soja';
         }
