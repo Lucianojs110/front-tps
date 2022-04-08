@@ -4,8 +4,12 @@
       <!-- Card stats -->
     </base-header>
 
- <!-- Modal Ver datos -->
-   <div class="modal" :class="{ mostrar: modalVista }" style="overflow-y: scroll">
+    <!-- Modal Ver datos -->
+    <div
+      class="modal"
+      :class="{ mostrar: modalVista }"
+      style="overflow-y: scroll"
+    >
       <div class="modal-dialog modal-md">
         <div class="modal-content">
           <!-- Modal Header -->
@@ -22,15 +26,12 @@
             </button>
           </div>
 
-               <!-- Modal body -->
+          <!-- Modal body -->
           <div class="modal-body">
             <!-- Inicio Fila -->
-            Cantidad de {{finalizar.producto}} enviada a producción: {{finalizar.cantidad}}kg
-            <hr>
+         
             <div class="row">
-
-            
-            <div class="col-md-6" v-if="finalizar.acciones == 'Desactivar'">
+              <div class="col-md-6" v-if="finalizar.acciones == 'Desactivar'">
                 <label>Cantidad desactivada (kg.)</label>
                 <input
                   v-model="finalizar.cantidad_desactivada"
@@ -38,18 +39,16 @@
                   class="form-control"
                   id="cantidad"
                   placeholder="Ingrese la cantidad en kilogramos"
-                  :class="{
-                    'is-invalid': isValid && $v.finalizar.cantidad_desactivada.$error,
+                   :class="{
+                    'is-invalid': isValid_cant_des,
                   }"
+                
                 />
-                <div
-                  v-if="isValid && !$v.finalizar.cantidad_desactivada.required"
-                  class="invalid-feedback"
-                >
+                <div v-if="isValid_cant_des" class="invalid-feedback">
                   El campo es requerido
                 </div>
+              
               </div>
-
 
               <div class="col-md-6" v-if="finalizar.acciones == 'Procesar'">
                 <label>Cantidad expeler (kg.)</label>
@@ -60,18 +59,15 @@
                   id="cantidad"
                   placeholder="Ingrese la cantidad en kilogramos"
                   :class="{
-                    'is-invalid': isValid && $v.finalizar.cantidad_expeler.$error,
+                    'is-invalid': isValid_cant_expeler,
                   }"
                 />
-                <div
-                  v-if="isValid && !$v.finalizar.cantidad_expeler.required"
-                  class="invalid-feedback"
-                >
+                <div v-if="isValid_cant_expeler" class="invalid-feedback">
                   El campo es requerido
                 </div>
               </div>
 
-                 <div class="col-md-6" v-if="finalizar.acciones == 'Procesar'">
+              <div class="col-md-6" v-if="finalizar.acciones == 'Procesar'">
                 <label>Cantidad Aceite (lts.)</label>
                 <input
                   v-model="finalizar.cantidad_aceite"
@@ -80,78 +76,76 @@
                   id="cantidad"
                   placeholder="Ingrese la cantidad en litros"
                   :class="{
-                    'is-invalid': isValid && $v.finalizar.cantidad_aceite.$error,
+                    'is-invalid': isValid_cant_aceite,
                   }"
                 />
-                <div
-                  v-if="isValid && !$v.finalizar.cantidad_aceite.required"
-                  class="invalid-feedback"
-                >
+                <div v-if="isValid_cant_aceite" class="invalid-feedback">
                   El campo es requerido
                 </div>
               </div>
             </div>
-            
-                <label>Fecha</label>
 
-                <b-datepicker
-                  v-model="finalizar.fecha"
-                  :show-week-number="showWeekNumber"
-                  :locale="locale"
-                  placeholder="Seleccione la fecha..."
-                  icon="calendar-today"
-                  :icon-right="selected ? 'close-circle' : ''"
-                  icon-right-clickable
-                  @icon-right-click="clearDate"
-                  trap-focus
-                  :class="{
-                    'is-invalid': isValid && $v.finalizar.fecha.$error,
-                  }"
-                >
-                </b-datepicker>
-                <div
-                  v-if="isValid && !$v.finalizar.fecha.required"
-                  class="invalid-feedback"
-                >
+            <label>Fecha</label>
+
+            <b-datepicker
+              v-model="finalizar.fecha"
+              :show-week-number="showWeekNumber"
+              :locale="locale"
+              placeholder="Seleccione la fecha..."
+              icon="calendar-today"
+              :icon-right="selected ? 'close-circle' : ''"
+              icon-right-clickable
+              @icon-right-click="clearDate"
+              trap-focus
+              :class="{
+                'is-invalid': isValid_fecha,
+              }"
+            >
+            </b-datepicker>
+            <div v-if="isValid_fecha" class="invalid-feedback">
                   El campo es requerido
-                </div>
+            </div>
 
-            
             <label for="timepicker-valid">Seleccione la Hora</label>
-            <b-form-timepicker id="datepicker-valid" 
-            :state="true"
-            v-model="finalizar.hora"
-                    locale="es"
-                    :class="{
-                      'is-invalid': isValid && $v.finalizar.hora.$error,
-                    }"
-                    >
+            <b-form-timepicker
+              id="datepicker-valid"
+              :state="true"
+              v-model="finalizar.hora"
+              locale="es"
+              placeholder="Ingrese la hora"
+              :class="{
+                    'is-invalid': isValid_hora,
+                  }"
+            >
             </b-form-timepicker>
-            <div
-                  v-if="isValid && !$v.finalizar.hora.required"
-                  class="invalid-feedback"
-                >
+            <div v-if="isValid_hora" class="invalid-feedback">
                   El campo es requerido
-                </div>
+             </div>
+
             <!-- Fin Fila -->
           </div>
 
           <!-- Modal footer -->
           <div class="modal-footer">
-              <button
+            <button 
+              v-if="finalizar.acciones == 'Procesar'"
               type="button"
               class="btn btn-primary"
               data-dismiss="modal"
               @click="fin_prod()"
             >
+            Agregar al Stock
+            </button>
+             <button 
+              v-if="finalizar.acciones == 'Desactivar'"
+              type="button"
+              class="btn btn-primary"
+              data-dismiss="modal"
+              @click="fin_prod_desactivar()"
+            >
               Agregar al Stock
             </button>
-             <button
-              type="button"
-              class="btn btn-success"
-              data-dismiss="modal"
-             
-            >
+            <button type="button" class="btn btn-success" data-dismiss="modal" v-if="finalizar.acciones == 'Desactivar'">
               Crear una venta
             </button>
             <button
@@ -162,14 +156,11 @@
             >
               Cancelar
             </button>
-           
           </div>
         </div>
       </div>
     </div>
-  <!-- Fin modal vista -->
-
-
+    <!-- Fin modal vista -->
 
     <!-- Modal Crear y Editar -->
     <div class="modal" :class="{ mostrar: modal }" style="overflow-y: scroll">
@@ -192,14 +183,12 @@
           <div class="modal-body">
             <!-- Inicio Fila -->
             <div class="row">
-           
               <div class="col-md-4" v-if="!modificar">
                 <label>Tipo de Grano</label>
                 <select
                   id="tipo_doc"
                   v-model="produccion.id_producto"
                   class="form-control"
-              
                   :class="{
                     'is-invalid': isValid && $v.produccion.id_producto.$error,
                   }"
@@ -217,7 +206,7 @@
                 </div>
               </div>
 
-               <div class="col-md-4" v-if="!modificar">
+              <div class="col-md-4" v-if="!modificar">
                 <label>Acción</label>
                 <select
                   id="tipo_doc"
@@ -239,7 +228,7 @@
                 </div>
               </div>
 
-               <div class="col-md-4">
+              <div class="col-md-4">
                 <label>Cantidad (kg.)</label>
                 <input
                   v-model="produccion.cantidad"
@@ -259,11 +248,10 @@
                 </div>
               </div>
 
-              <br>
+              <br />
 
-              <div class="col-md-4">
+              <div class="col-md-8">
                 <label>Fecha</label>
-
                 <b-datepicker
                   v-model="produccion.fecha"
                   :show-week-number="showWeekNumber"
@@ -285,19 +273,21 @@
                 >
                   El campo es requerido
                 </div>
-
               </div>
-              <div class="col-md-3">
+
+              <div class="col-md-4">
                 <label>Hora</label>
-                <b-col md="auto">
-                  <b-time
-                    v-model="produccion.hora"
-                    locale="es"
-                    :class="{
-                      'is-invalid': isValid && $v.produccion.hora.$error,
-                    }"
-                  ></b-time>
-                </b-col>
+                <b-form-timepicker
+                  id="datepicker-valid"
+                  :state="true"
+                  placeholder="seleccione la hora"
+                  v-model="produccion.hora"
+                  locale="es"
+                  :class="{
+                    'is-invalid': isValid && $v.produccion.hora.$error,
+                  }"
+                >
+                </b-form-timepicker>
 
                 <div
                   v-if="isValid && !$v.produccion.hora.required"
@@ -306,14 +296,8 @@
                   El campo es requerido
                 </div>
               </div>
-
-
-  
-
             </div>
             <!-- Fin Fila -->
-
-           
           </div>
 
           <!-- Modal footer -->
@@ -385,37 +369,38 @@
                 <template v-slot:cell(producto)="data">
                   {{ data.item.producto.nombre }}
                 </template>
-              
-                 <template v-slot:cell(cantidad)="data">
+
+                <template v-slot:cell(cantidad)="data">
                   {{ data.item.cantidad }} kg.
                 </template>
                 <template v-slot:cell(accion)="data">
-                   
-                      <button  v-if="data.item.estado != 'finalizado'"
-                        @click="
-                          modificar = true;
-                          abrirModalVista(data.item);
-                        "
-                        class="btn btn-light btn-sm"
-                      >
-                        Finalizar
-                      </button>
-                     
-                      <button v-if="data.item.estado != 'finalizado'"
-                        @click="
-                          modificar = true;
-                          abrirModal(data.item);
-                        "
-                        class="btn btn-secondary btn-sm"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        @click="eliminar(data.item.id)"
-                        class="btn btn-danger btn-sm"
-                      >
-                        Eliminar
-                      </button>
+                  <button
+                    v-if="data.item.estado != 'finalizado'"
+                    @click="
+                      modificar = true;
+                      abrirModalVista(data.item);
+                    "
+                    class="btn btn-light btn-sm"
+                  >
+                    Finalizar
+                  </button>
+
+                  <button
+                    v-if="data.item.estado != 'finalizado'"
+                    @click="
+                      modificar = true;
+                      abrirModal(data.item);
+                    "
+                    class="btn btn-secondary btn-sm"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    @click="eliminar(data.item.id)"
+                    class="btn btn-danger btn-sm"
+                  >
+                    Eliminar
+                  </button>
                 </template>
               </b-table>
               <b-pagination
@@ -438,7 +423,7 @@
 
 <script>
 import axios from "axios";
-import { required  } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 export default {
   props: ["items"],
   computed: {
@@ -469,9 +454,11 @@ export default {
         id_producto: "",
         cantidad: "",
         acciones: "",
+        fecha: "",
+        hora: "",
       },
 
-       finalizar: {
+      finalizar: {
         cantidad_expeler: "",
         cantidad_aceite: "",
         cantidad_desactivada: "",
@@ -485,7 +472,11 @@ export default {
       modalVista: 0,
       tituloModal: "",
       isValid: false,
-      
+      isValid_cant_des: false,
+      isValid_cant_expeler: false,
+      isValid_cant_aceite: false,
+      isValid_fecha: false,
+      isValid_hora: false,
     };
   },
 
@@ -505,10 +496,8 @@ export default {
       },
       hora: {
         required,
-      }, 
+      },
     },
- 
-   
   },
 
   methods: {
@@ -528,17 +517,14 @@ export default {
         })
         .then((res) => {
           this.items = res.data;
-          console.table(res.data);
         })
         .catch((error) => {
           console.error(error);
         });
     },
 
-  
     fin_prod() {
-        console.log(this.id,this.finalizar)
-     
+      if (this.finalizar.cantidad_aceite && this.finalizar.cantidad_expeler && this.finalizar.hora && this.finalizar.fecha ) {
         axios
           .put(
             process.env.VUE_APP_RUTA_API + "finalizar/" + this.id,
@@ -558,13 +544,59 @@ export default {
             var array = Object.values(error.response.data.errors + "<br>");
             array.forEach(swal(String(array)));
           });
-         
-      
+      } else {
+        if (this.finalizar.hora == "") {
+          this.isValid_hora = true;
+        }
+        if (this.finalizar.fecha == "") {
+          this.isValid_fecha = true;
+        }
+         if (this.finalizar.cantidad_expeler == "") {
+          this.isValid_cant_expeler = true;
+        }
+        if (this.finalizar.cantidad_aceite == "") {
+          this.isValid_cant_aceite = true;
+        }
+      }
     },
 
+      fin_prod_desactivar() {
+      if (this.finalizar.cantidad_desactivada && this.finalizar.hora && this.finalizar.fecha) {
+        axios
+          .put(
+            process.env.VUE_APP_RUTA_API + "finalizar/" + this.id,
+            this.finalizar,
+            {
+              headers: { Authorization: "Bearer " + localStorage.token },
+            }
+          )
+          .then((res) => {
+            this.cerrarModalVista();
+            this.listar_produccion();
+            swal("Exito!", "El registro se ha modificado!", "success");
+            this.$v.$reset();
+            this.cerrarModal();
+          })
+          .catch(function (error) {
+            var array = Object.values(error.response.data.errors + "<br>");
+            array.forEach(swal(String(array)));
+          });
+      } else {
+        if (this.finalizar.hora == "") {
+          this.isValid_hora = true;
+        }
+        if (this.finalizar.fecha == "") {
+          this.isValid_fecha = true;
+        }
+         if (this.finalizar.cantidad_desactivada == "") {
+          this.isValid_cant_des = true;
+        }
+       
+      }
+    },
 
     guardar() {
-      console.log('guardar')
+      console.log("guardar");
       if (this.modificar) {
         this.isValid = true;
         this.$v.$touch();
@@ -581,7 +613,6 @@ export default {
             }
           )
           .then((res) => {
-         
             this.listar_produccion();
             swal("Exito!", "El registro se ha modificado!", "success");
             this.$v.$reset();
@@ -606,7 +637,7 @@ export default {
           .then((res) => {
             this.listar_produccion();
             swal("Exito!", "El se ha ingresado con exito!", "success");
-            this.$v.$reset();
+            //this.$v.$reset();
             this.cerrarModal();
           })
           .catch(function (error) {
@@ -647,43 +678,42 @@ export default {
         this.id = data.id;
         this.tituloModal = "Modificar produccion";
         this.produccion.id_producto = data.id_producto;
-        this.produccion.acciones= data.acciones;
+        this.produccion.acciones = data.acciones;
         this.produccion.cantidad = data.cantidad;
         this.produccion.fecha = data.fecha;
         this.produccion.hora = data.hora;
       } else {
-      this.id = 0;
+        this.id = 0;
         this.tituloModal = "Ingresar a Producción";
         this.produccion.id_producto = "";
-        this.produccion.acciones= "";
+        this.produccion.acciones = "";
         this.produccion.cantidad = "";
         this.produccion.fecha = "";
         this.produccion.hora = "";
       }
-      
     },
 
-      abrirModalVista(data = {}) {
+    abrirModalVista(data = {}) {
       this.modalVista = 1;
-       this.id = data.id;
-        this.tituloModal = "Finalizar proceso";
-        this.finalizar.cantidad_expeler = "";
-        this.finalizar.cantidad_aceite = "";
-        this.finalizar.cantidad_desactivada = "";
-        this.finalizar.id_producto = data.id_producto;
-        this.finalizar.acciones= data.acciones;
-        this.finalizar.cantidad = data.cantidad;
-        this.finalizar.fecha = data.fecha;
-        this.finalizar.hora = data.hora;
-        if(data.id_producto==1){
-          this.finalizar.producto = 'Soja';
-        }
-        if(data.id_producto==2){
-          this.finalizar.producto = 'Girasol';
-        }
-        if(data.id_producto==3){
-          this.finalizar.producto = 'Maíz';
-        }
+      this.id = data.id;
+      this.tituloModal = "Finalizar proceso";
+      this.finalizar.cantidad_expeler = "";
+      this.finalizar.cantidad_aceite = "";
+      this.finalizar.cantidad_desactivada = data.cantidad;
+      this.finalizar.id_producto = data.id_producto;
+      this.finalizar.acciones = data.acciones;
+      this.finalizar.cantidad = data.cantidad;
+      this.finalizar.fecha = "";
+      this.finalizar.hora = "";
+      if (data.id_producto == 1) {
+        this.finalizar.producto = "Soja";
+      }
+      if (data.id_producto == 2) {
+        this.finalizar.producto = "Girasol";
+      }
+      if (data.id_producto == 3) {
+        this.finalizar.producto = "Maíz";
+      }
     },
 
     cerrarModalVista() {
@@ -696,7 +726,6 @@ export default {
 
   created() {
     this.listar_produccion();
-   
   },
 };
 </script>
