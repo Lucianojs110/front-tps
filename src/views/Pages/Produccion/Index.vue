@@ -10,7 +10,7 @@
       :class="{ mostrar: modalVista }"
       style="overflow-y: scroll"
     >
-      <div class="modal-dialog modal-md">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <!-- Modal Header -->
           <div class="modal-header">
@@ -610,6 +610,8 @@ export default {
             swal("Exito!", "El registro se ha modificado!", "success");
             this.$v.$reset();
             this.cerrarModal();
+            this.isValid_cant_expeler = false;
+            this.isValid_cant_aceite = false;
           })
           .catch(function (error) {
             var array = Object.values(error.response.data.errors + "<br>");
@@ -651,6 +653,9 @@ export default {
             swal("Exito!", "El registro se ha modificado!", "success");
             this.$v.$reset();
             this.cerrarModal();
+            this.isValid_fecha = false;
+            this.isValid_fecha = false;
+            this.isValid_cant_des = false;
           })
           .catch(function (error) {
             var array = Object.values(error.response.data.errors + "<br>");
@@ -691,6 +696,9 @@ export default {
             swal("Exito!", "El registro se ha modificado!", "success");
             this.$v.$reset();
             this.cerrarModal();
+            this.isValid_fecha = false;
+            this.isValid_hora = false;
+            this.isValid_cant_des = false;
           })
           .catch(function (error) {
             var array = Object.values(error.response.data.errors + "<br>");
@@ -834,6 +842,11 @@ export default {
     cerrarModalVista() {
       this.crear_venta = false;
       this.modalVista = 0;
+      this.isValid_fecha = false;
+      this.isValid_hora = false;
+      this.isValid_cant_des = false;
+      this.isValid_cant_expeler = false;
+      this.isValid_cant_aceite = false;
     },
     cerrarModal() {
       this.modal = 0;
