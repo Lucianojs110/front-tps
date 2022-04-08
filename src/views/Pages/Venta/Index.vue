@@ -77,7 +77,7 @@
             <!-- Inicio Fila -->
             <div class="row">
               <div class="col-md-6">
-                <label>Cantidad (kg.)</label>
+                <label>Cantidad</label>
                 <input
                   v-model="venta.cantidad"
                   type="number"
@@ -217,7 +217,7 @@
             <!-- Inicio Fila -->
             <div class="row">
               <div class="col-md-6">
-                <label>Cantidad (kg.)</label>
+                <label>Cantidad</label>
                 <input
                   v-model="venta.cantidad"
                   type="number"
@@ -546,7 +546,7 @@ export default {
     eliminar(id) {
       swal({
         title: "¿ Esta seguro ?",
-        text: "La venta será eliminado definitavemente!",
+        text: "La venta será eliminada definitavemente!",
         icon: "warning",
         buttons: ["Cancelar", " Si "],
       }).then((willDelete) => {
@@ -557,7 +557,7 @@ export default {
             })
             .then((res) => {
               this.cerrarModal();
-              this.listar_ingresos();
+              this.listar_ventas();
               swal("Exito!", "El Ingreso se ha eliminado!", "success");
             })
             .catch(function (error) {
