@@ -31,31 +31,6 @@
             <!-- Inicio Fila -->
 
             <div class="row">
-
-
-              <div class="col-md-6" v-if="crear_venta">
-                <label>Cliente</label>
-                <select
-
-                  v-model="finalizar.id_cliente"
-                  class="form-control"
-                  
-                >
-                  <option selected disabled value="">Seleccione...</option>
-                  <option
-                    selected
-                    v-for="cliente in clientes"
-                    :key="cliente.id"
-                    :value="cliente.id"
-                  >
-                    {{ cliente.nombre }}
-                  </option>
-                </select>
-                <div v-if="isValid_cant_des" class="invalid-feedback">
-                  El campo es requerido
-                </div>
-              </div>
-
               <div class="col-md-6" v-if="finalizar.acciones == 'Desactivar'">
                 <label>Cantidad desactivada (kg.)</label>
                 <input
@@ -130,7 +105,7 @@
                 </div>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-6" >
                 <label for="timepicker-valid">Seleccione la Hora</label>
                 <b-form-timepicker
                   id="datepicker-valid"
@@ -164,7 +139,7 @@
               Agregar al Stock
             </button>
             <button
-              v-if="finalizar.acciones == 'Desactivar' && !crear_venta"
+              v-if="finalizar.acciones == 'Desactivar'"
               type="button"
               class="btn btn-primary"
               data-dismiss="modal"
@@ -172,29 +147,14 @@
             >
               Agregar al Stock
             </button>
-
             <button
-             @click="crearVenta()"
               type="button"
               class="btn btn-success"
               data-dismiss="modal"
-              v-if="finalizar.acciones == 'Desactivar' && !crear_venta"
-             
+              v-if="finalizar.acciones == 'Desactivar'"
             >
               Crear una venta
             </button>
-
-             <button
-             @click="fin_prod_venta()"
-              type="button"
-              class="btn btn-success"
-              data-dismiss="modal"
-              v-if="crear_venta"
-             
-            >
-              finalizar venta
-            </button>
-             
             <button
               @click="cerrarModalVista()"
               type="button"
@@ -416,6 +376,7 @@
                 <template v-slot:cell(producto)="data">
                   {{ data.item.producto.nombre }}
                 </template>
+
                 <template v-slot:cell(cantidad)="data">
                   {{ data.item.cantidad }} kg.
                 </template>
@@ -523,8 +484,6 @@ export default {
       isValid_cant_aceite: false,
       isValid_fecha: false,
       isValid_hora: false,
-      crear_venta: false,
-      clientes: [],
     };
   },
 
@@ -556,8 +515,6 @@ export default {
       this.selected = null;
     },
 
-   
-
     listar_produccion() {
       axios
         .get(process.env.VUE_APP_RUTA_API + "produccion", {
@@ -567,22 +524,6 @@ export default {
         })
         .then((res) => {
           this.items = res.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-
-      listar_clientes() {
-      axios
-        .get(process.env.VUE_APP_RUTA_API + "clientes", {
-          headers: {
-            Authorization: `Bearer ${localStorage.token}`,
-          },
-        })
-        .then((res) => {
-          this.clientes = res.data;
-         
         })
         .catch((error) => {
           console.error(error);
@@ -669,48 +610,8 @@ export default {
       }
     },
 
-
-    fin_prod_venta() {
-      console.log(this.finalizar)
-      if (
-        this.finalizar.cantidad_desactivada &&
-        this.finalizar.hora &&
-        this.finalizar.fecha
-      ) {
-        axios
-          .put(
-            process.env.VUE_APP_RUTA_API + "vender/" + this.id,
-            this.finalizar,
-            {
-              headers: { Authorization: "Bearer " + localStorage.token },
-            }
-          )
-          .then((res) => {
-            this.cerrarModalVista();
-            this.listar_produccion();
-            swal("Exito!", "El registro se ha modificado!", "success");
-            this.$v.$reset();
-            this.cerrarModal();
-          })
-          .catch(function (error) {
-            var array = Object.values(error.response.data.errors + "<br>");
-            array.forEach(swal(String(array)));
-          });
-      } else {
-        if (this.finalizar.hora == "") {
-          this.isValid_hora = true;
-        }
-        if (this.finalizar.fecha == "") {
-          this.isValid_fecha = true;
-        }
-        if (this.finalizar.cantidad_desactivada == "") {
-          this.isValid_cant_des = true;
-        }
-      }
-    },
-
     guardar() {
-      
+      console.log("guardar");
       if (this.modificar) {
         this.isValid = true;
         this.$v.$touch();
@@ -819,7 +720,6 @@ export default {
       this.finalizar.cantidad = data.cantidad;
       this.finalizar.fecha = "";
       this.finalizar.hora = "";
-      this.finalizar.id_cliente = "";
       if (data.id_producto == 1) {
         this.finalizar.producto = "Soja";
       }
@@ -832,21 +732,14 @@ export default {
     },
 
     cerrarModalVista() {
-      this.crear_venta = false;
       this.modalVista = 0;
     },
     cerrarModal() {
       this.modal = 0;
     },
-
-     crearVenta() {
-     
-      this.crear_venta = true;
-    }
   },
 
   created() {
-    this.listar_clientes();
     this.listar_produccion();
   },
 };
