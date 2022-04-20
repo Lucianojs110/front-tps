@@ -243,7 +243,7 @@
               <div class="col-md-6">
                 <label>Proveedor</label>
                 <select
-                  id="tipo_doc"
+                
                   v-model="ingreso.id_proveedor"
                   class="form-control"
                   :class="{
@@ -272,7 +272,7 @@
                 <label>Tipo de Grano</label>
 
                 <select
-                  id="tipo_doc"
+            
                   v-model="ingreso.id_producto"
                   class="form-control"
                   :class="{
@@ -646,7 +646,9 @@ export default {
 
       ingreso: {
         id_proveedor: "",
+        id_producto: "",
         fecha_entrada: "",
+        hora_entrada: "",
         id_tipo_grano: "",
         cantidad: "",
         condicion: "",
@@ -735,7 +737,7 @@ export default {
         })
         .then((res) => {
           this.proveedores = res.data;
-          console.table(this.proveedores);
+          
         })
         .catch((error) => {
           console.error(error);

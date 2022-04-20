@@ -2,40 +2,64 @@
   <div>
     <base-header class="pb-6 pb-8 pt-2 pt-md-8 bg-gradient-success">
       <!-- Card stats -->
-    </base-header>
+     
+    
+     <div class="row ">
+        <div class="col col-lg-4"  v-for="cantidad in cantidades" :key="cantidad.id_producto">
+         
+          <card  >
+           <h1>{{cantidad.Nombre}}</h1> 
+            <h2>{{cantidad.Total}} kg.</h2> 
+             <b-button size="sm" variant="success">Actualizar precio</b-button>
+          </card>
+        <br>
+        </div>
+        
+       
+      </div>
+      </base-header>
 
-    <!--Charts-->
-    <b-container fluid class="mt--7">
-      <!--Tables-->
-      <b-row class="mt-1">
-        <b-col xl="12" class="mb-5 mb-xl-0">
-          <b-card body-class="p-0" header-class="border-0">
-            <template v-slot:header>
-              <b-row align-v="center">
-                <b-col>
-                  <h3 class="mb-0">Bienvenido {{user_name}}!</h3>
-                </b-col>
-              </b-row>
-            </template>
-          </b-card>
-        </b-col>
-      </b-row>
+    <b-container fluid class="mt--7">  
       <!--End tables-->
     </b-container>
   </div>
 </template>
 <script>
-
-
+import axios from "axios";
 export default {
- 
   data() {
     return {
       user_name: localStorage.name,
-
+      cantidades: [],
     };
   },
+    
+    
+    methods: {
+    generateReport() {
+      this.$refs.html2Pdf.generatePdf();
+    },
 
+    stock() {
+      axios
+        .get(process.env.VUE_APP_RUTA_API + "cantidad", {
+          headers: {
+            Authorization: `Bearer ${localStorage.token}`,
+          },
+        })
+        .then((res) => {
+          
+          this.cantidades = res.data;
+         console.log(this.cantidades);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
+  created() {
+    this.stock();
+  },
 };
 </script>
 <style>

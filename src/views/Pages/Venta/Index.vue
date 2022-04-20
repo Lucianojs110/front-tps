@@ -109,11 +109,6 @@
             </div>
             <!-- Fin Fila -->
 
-          
-
-           
-
-        
           </div>
 
           <!-- Modal footer -->
@@ -342,18 +337,15 @@
                   {{ data.item.cliente.nombre }}
                 </template>
                 <template v-slot:cell(cantidad)="data">
-                  {{ data.item.cantidad }} kg.
+                  {{ data.item.cantidad }}
                 </template>
                 <template v-slot:cell(acciones)="data">
-                  <button
-                    @click="
-                      modificar = true;
-                      abrirModalVista(data.item);
-                    "
-                    class="btn btn-light btn-sm"
-                  >
-                    Ver
-                  </button>
+                   
+                  <RouterLink :to="`venta/${data.item.id}`" 
+                  class="btn btn-secondary btn-sm"> 
+                  Ver 
+                  </RouterLink>
+
                   <button
                     @click="
                       modificar = true;
@@ -392,6 +384,7 @@
 <script>
 import axios from "axios";
 import { required } from "vuelidate/lib/validators";
+
 export default {
   props: ["items"],
   computed: {
@@ -407,6 +400,7 @@ export default {
         "cliente",
         "fecha",
         "cantidad",
+        "total",
         "acciones",
       ],
       selected: new Date(),

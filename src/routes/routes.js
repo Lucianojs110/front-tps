@@ -67,6 +67,12 @@ const routes = [
         name: "venta",
         component: () => import("../views/Pages/Venta/Index.vue"),
         meta: { requiresAuth: true}
+      },
+      {
+        path: "/venta/:id",
+        name: "venta",
+        component: () => import("../views/Pages/Venta/show.vue"),
+        meta: { requiresAuth: true}
       }
     ]
   },
