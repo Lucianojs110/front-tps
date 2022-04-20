@@ -311,7 +311,7 @@ export default {
     },
 
     guardar() {
-      console.log('entro')
+  
       if (this.modificar) {
         this.isValid = true;
         this.$v.$touch();
