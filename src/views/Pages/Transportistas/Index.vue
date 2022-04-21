@@ -25,6 +25,70 @@
           <div class="modal-body">
             <!-- Inicio Fila -->
             <div class="row">
+              <div class="col-md-4">
+                <label>Nombre</label>
+                <input
+                  v-model="transportista.nombre_transportista"
+                  type="text"
+                  class="form-control"
+                  id="nombre_transportista"
+                  placeholder="Nombre Transportista"
+                  :class="{
+                    'is-invalid': isValid && $v.transportista.nombre_transportista.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.transportista.nombre_transportista.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+
+
+              <div class="col-md-4">
+                <label>Dni</label>
+                <input
+                  v-model="transportista.dni_chofer"
+                  type="text"
+                  class="form-control"
+                  id="dni_chofer"
+                  placeholder="DNI"
+                  :class="{
+                    'is-invalid': isValid && $v.transportista.dni_chofer.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.transportista.dni_chofer.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label>Cuit</label>
+                <input
+                  v-model="transportista.cuit_chofer"
+                  type="text"
+                  class="form-control"
+                  id="cuit_chofer"
+                  placeholder="CUIT"
+                  :class="{
+                    'is-invalid': isValid && $v.transportista.cuit_chofer.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.transportista.cuit_chofer.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+            <!-- Inicio Fila -->
+            <div class="row">
               <div class="col-md-6">
                 <label>Carnet Profesional</label>
                 <input
@@ -46,7 +110,33 @@
               </div>
 
 
-              <div class="col-md-4">
+              <div class="col-md-6">
+                <label>Fecha</label>
+
+                <b-datepicker
+                  v-model="transportista.fechav_cprof"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :class="{
+                    'is-invalid': isValid_fecha,
+                  }"
+                >
+                </b-datepicker>
+                <div v-if="isValid_fecha" class="invalid-feedback">
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+            <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
                 <label>Carnet Cocátra</label>
                 <input
                   v-model="transportista.carnet_cocatra"
@@ -65,6 +155,31 @@
                   El campo es requerido
                 </div>
               </div>
+
+            <div class="col-md-6">
+                <label>Fecha</label>
+
+                <b-datepicker
+                  v-model="transportista.fechav_ccocatra"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :class="{
+                    'is-invalid': isValid_fecha,
+                  }"
+                >
+                </b-datepicker>
+                <div v-if="isValid_fecha" class="invalid-feedback">
+                  El campo es requerido
+                </div>
+              </div>
+
+              
             </div>
             <!-- Fin Fila -->
 
@@ -82,6 +197,34 @@
               </div>
 
               <div class="col-md-6">
+                <label>Fecha</label>
+
+                <b-datepicker
+                  v-model="transportista.fechav_cha"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :class="{
+                    'is-invalid': isValid_fecha,
+                  }"
+                >
+                </b-datepicker>
+                <div v-if="isValid_fecha" class="invalid-feedback">
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <!-- Inicio Fila Cedula Semi -->
+            <div class="row">
+
+                <div class="col-md-6">
                 <label>Cédula Semi</label>
                 <input
                   v-model="transportista.cedula_sem"
@@ -92,36 +235,106 @@
                  
                 />
               </div>
-            </div>
-            <!-- Fin Fila -->
 
-            <!-- Inicio Fila -->
+              <div class="col-md-6">
+                <label>Fecha</label>
+
+                <b-datepicker
+                  v-model="transportista.fechav_sem"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :class="{
+                    'is-invalid': isValid_fecha,
+                  }"
+                >
+                </b-datepicker>
+                <div v-if="isValid_fecha" class="invalid-feedback">
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- Fin Fila Cedula Semi-->
+            
+        <!-- Inicio Fila VTV CHASIS-->
             <div class="row">
-              <div class="col-md-6">
-                <label>Vtv Chasis</label>
-                <input
-                  v-model="transportista.vtv_cha"
-                  type="text"
-                  class="form-control"
-                  id="vtv_cha"
-                  placeholder="Vtv Chasis"
-                 
-                />
-              </div>
-              <div class="col-md-6">
-                <label>Vtv Semi</label>
-                <input
-                  v-model="transportista.vtv_sem"
-                  type="text"
-                  class="form-control"
-                  id="vtv_sem"
-                  placeholder="Vtv Semi"
-                />
+                    <div class="col-md-6">
+                    <label>Vtv Chasis</label>
+                    <input
+                        v-model="transportista.vtv_cha"
+                        type="text"
+                        class="form-control"
+                        id="vtv_cha"
+                        placeholder="Vtv Chasis"
+                        
+                    />
+                    </div>
+                    <div class="col-md-6">
+                <label>Fecha</label>
+                <b-datepicker
+                  v-model="transportista.fechav_vtvcha"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :class="{
+                    'is-invalid': isValid_fecha,
+                  }"
+                >
+                </b-datepicker>
+                <div v-if="isValid_fecha" class="invalid-feedback">
+                  El campo es requerido
+                </div>
               </div>
             </div>
-            <!-- Fin Fila -->
-          </div>
+        <!-- FIN VTV CHASIS -->
 
+        <!-- Inicio Fila VTV SEMI-->
+            <div class="row">
+                    <div class="col-md-6">
+                        <label>Vtv Semi</label>
+                        <input
+                            v-model="transportista.vtv_sem"
+                            type="text"
+                            class="form-control"
+                            id="vtv_sem"
+                            placeholder="Vtv Semi"
+                        />
+                    </div>
+                    <div class="col-md-6">
+                <label>Fecha</label>
+                <b-datepicker
+                  v-model="transportista.fechav_vtvsem"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :class="{
+                    'is-invalid': isValid_fecha,
+                  }"
+                >
+                </b-datepicker>
+                <div v-if="isValid_fecha" class="invalid-feedback">
+                  El campo es requerido
+                </div>
+              </div>
+            </div>
+            <!-- FIN VTV SEMI-->
+          </div>
+          <!-- FIN Row -->
           <!-- Modal footer -->
           <div class="modal-footer">
             <button
@@ -174,21 +387,25 @@
                 <thead>
                   <tr>
                     <th>#</th>
+                    <th>Nombre</th>
                     <th>Nº Carnet Prof.</th>
                     <th>Nº Carnet Cocatra</th>
                     <th>Cédula Chasis</th>
                     <th>Cédula Semi</th>
                     <th>Vtv Chasis</th>
                     <th>Vtv Semi</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="transportista in transportistas" :key="transportista.id">
                     <th scope="row">{{ transportista.id }}</th>
+                    <td>{{ transportista.nombre_transportista }}</td>
                     <td>{{ transportista.carnet_prof }}</td>
                     <td>{{ transportista.carnet_cocatra }} <!-- - {{ proveedor.num_doc }} --></td>
                     <td>{{ transportista.cedula_cha }} <!-- - {{ proveedor.ciudad }} --></td>
                     <td>{{ transportista.cedula_sem }}</td>
+                    <td>{{ transportista.vtv_cha }}</td>
                     <td>{{ transportista.vtv_sem }}</td>
                     <td>
                       <button
@@ -307,7 +524,7 @@ export default {
         axios
           .put(
             process.env.VUE_APP_RUTA_API + "transportistas/" + this.id,
-            this.proveedor,
+            this.transportista,
             {
               headers: { Authorization: "Bearer " + localStorage.token },
             }
@@ -331,7 +548,7 @@ export default {
         }
         
         axios
-          .post(process.env.VUE_APP_RUTA_API + "transportistas", this.proveedor, {
+          .post(process.env.VUE_APP_RUTA_API + "transportistas", this.transportista, {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((res) => {
@@ -376,24 +593,28 @@ export default {
       this.modal = 1;
       if (this.modificar) {
         this.id = data.id;
-        this.tituloModal = "Modificar Proveedor";
-        this.transportista.nombre = data.nombre;
-        this.transportista.tipo_doc = data.tipo_doc;
-        this.transportista.num_doc = data.num_doc;
-        this.transportista.ciudad = data.ciudad;
-        this.transportista.direccion = data.direccion;
-        this.transportista.email = data.email;
-        this.transportista.telefono = data.telefono;
+        this.tituloModal = "Modificar Transportista";
+        this.transportista.nombre_transportista = data.nombre_transportista;
+        this.transportista.carnet_prof = data.carnet_prof;
+        this.transportista.carnet_cocatra = data.carnet_cocatra;
+        this.transportista.cedula_cha = data.cedula_cha;
+        this.transportista.cedula_sem = data.cedula_sem;
+        this.transportista.vtv_cha = data.vtv_cha;
+        this.transportista.vtv_sem = data.vtv_sem;
+        this.transportista.dni_chofer = data.dni_chofer;
+        this.transportista.cuit_chofer = data.cuit_chofer;
       } else {
         this.id = 0;
         this.tituloModal = "Crear Transportista";
-        this.transportista.nombre = "";
-        this.transportista.tipo_doc = "";
-        this.transportista.num_doc = "";
-        this.transportista.ciudad = "";
-        this.transportista.direccion = "";
-        this.transportista.email = "";
-        this.transportista.telefono = "";
+        this.transportista.nombre_transportista = "";
+        this.transportista.carnet_prof = "";
+        this.transportista.carnet_cocatra = "";
+        this.transportista.cedula_cha = "";
+        this.transportista.cedula_sem = "";
+        this.transportista.vtv_cha = "";
+        this.transportista.vtv_sem = "";
+        this.transportista.dni_chofer = "";
+        this.transportista.cuit_chofer = "";
       }
     },
     cerrarModal() {
