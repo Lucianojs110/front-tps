@@ -77,7 +77,7 @@
                         <td>{{ venta.cantidad }}</td>
                         <td>Kg.</td>
                         <td>${{ venta.precio_unitario }}</td>
-                        <td>${{ venta.total }}</td>
+                        <td>${{ venta.neto }}</td>
                       </tr>
                     </table>
                   </row>
