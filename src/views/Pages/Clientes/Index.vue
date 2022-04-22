@@ -29,7 +29,7 @@
                   v-model="cliente.nombre"
                   type="text"
                   class="form-control"
-                  id="name"
+              
                   placeholder="Nombre o razon social del cliente"
                   :class="{
                     'is-invalid': isValid && $v.cliente.nombre.$error,
@@ -53,9 +53,7 @@
                     'is-invalid': isValid && $v.cliente.tipo_doc.$error,
                   }"
                 >
-                  <option disabled value="">
-                    Seleccione...
-                  </option>
+                  <option disabled value="">Seleccione...</option>
                   <option
                     selected
                     v-for="item in items_tipo_doc"
@@ -65,10 +63,10 @@
                     {{ item }}
                   </option>
                 </select>
-                   <div
+                <div
                   v-if="isValid && !$v.cliente.tipo_doc.required"
                   class="invalid-feedback"
-                   >
+                >
                   El campo es requerido
                 </div>
               </div>
@@ -114,9 +112,7 @@
                   v-model="cliente.telefono"
                   type="text"
                   class="form-control"
-                  id="last_name"
                   placeholder="Ingrese el numero de teléfono"
-                 
                 />
               </div>
             </div>
@@ -132,7 +128,6 @@
                   class="form-control"
                   id="direccion"
                   placeholder="Ingrese una direccion"
-                 
                 />
               </div>
               <div class="col-md-6">
@@ -141,13 +136,44 @@
                   v-model="cliente.ciudad"
                   type="text"
                   class="form-control"
-                  id="last_name"
                   placeholder="Ingrese localidad del Cliente"
                 />
               </div>
             </div>
             <!-- Fin Fila -->
+
+                <div class="row">
+
+               <div class="col-md-6">
+                <label>Condicion frente al iva</label>
+                <select
+                  v-model="cliente.iva"
+                  class="form-control"
+                  :class="{
+                    'is-invalid': isValid && $v.cliente.iva.$error,
+                  }"
+                >
+                  <option disabled value="">Seleccione...</option>
+                  <option
+                    selected
+                    v-for="item in items_iva"
+                    :key="item"
+                    :value="item"
+                  >
+                    {{ item }}
+                  </option>
+                </select>
+                <div
+                  v-if="isValid && !$v.cliente.iva.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
           </div>
+          </div>
+
+      
 
           <!-- Modal footer -->
           <div class="modal-footer">
@@ -171,7 +197,6 @@
         </div>
       </div>
     </div>
-        
 
     <!--Charts-->
     <b-container fluid class="mt--7">
@@ -197,63 +222,84 @@
                 </b-col>
               </b-row>
             </template>
+
             <div class="table-responsive">
-              <table class="table" id="table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Nombre/razon social</th>
-                    <th>DNI/CUIT</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="cliente in clientes" :key="cliente.id">
-                    <th scope="row">{{ cliente.id }}</th>
-                    <td>{{ cliente.nombre }}</td>
-                    <td>{{ cliente.tipo_doc }} - {{ cliente.num_doc }}</td>
-                    <td>{{ cliente.direccion }} - {{ cliente.ciudad }}</td>
-                    <td>{{ cliente.telefono }}</td>
-                    <td>{{ cliente.email }}</td>
-                    <td>
-                      <button
-                        @click="
-                          modificar = true;
-                          abrirModal(cliente);
-                        "
-                        class="btn btn-secondary btn-sm"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        @click="eliminar(cliente.id)"
-                        class="btn btn-danger btn-sm"
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <b-table
+                striped
+                hover
+                :items="items"
+                :fields="fields"
+                :per-page="perPage"
+                :current-page="currentPage"
+                :filter="filter"
+              >
+                <template v-slot:cell(acciones)="data">
+                  <button
+                    @click="
+                      modificar = true;
+                      abrirModal(data.item);
+                    "
+                    class="btn btn-secondary btn-sm"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    @click="eliminar(data.item.id)"
+                    class="btn btn-danger btn-sm"
+                  >
+                    Eliminar
+                  </button>
+                </template>
+              </b-table>
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+              >
+              </b-pagination>
             </div>
           </b-card>
         </b-col>
       </b-row>
       <!--End tables-->
     </b-container>
-   </div>
+  </div>
 </template>
-
+<script src="https://unpkg.com/vue@2.6.2/dist/vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.js"></script>
 <script>
 import axios from "axios";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
+  props: ["items"],
+  computed: {
+    rows() {
+      return this.items.length;
+    },
+  },
   data() {
     return {
-       cliente: {
+      fields: [
+        "id",
+        "nombre",
+        "tipo_doc",
+        "num_doc",
+        "ciudad",
+        "direccion",
+        "email",
+        "telefono",
+        "iva",
+        "acciones",
+      ],
+
+      selected: new Date(),
+      showWeekNumber: false,
+      locale: "es-ES",
+      perPage: 10,
+      currentPage: 1,
+      filter: "",
+
+      cliente: {
         nombre: "",
         tipo_doc: "",
         num_doc: "",
@@ -261,35 +307,39 @@ export default {
         direccion: "",
         email: "",
         telefono: "",
+        iva: "",
       },
 
       id: 0,
       modificar: true,
       modal: 0,
-      tituloModal: '',
+      tituloModal: "",
       clientes: [],
       isValid: false,
-      items_tipo_doc: ['DNI', 'CUIT'],
+      items_tipo_doc: ["DNI", "CUIT"],
+      items_iva: ["RESPONSABLE INSCRIPTO", "CONSUMIDOR FINAL"],
     };
   },
 
   validations: {
     cliente: {
-        nombre: {
+      nombre: {
         required,
         minLength: minLength(2),
       },
-       tipo_doc: {
+      tipo_doc: {
         required,
       },
       num_doc: {
+        required,
+      },
+      iva: {
         required,
       },
     },
   },
 
   methods: {
-  
     selectCategory(event) {
       console.log(event.target.value);
     },
@@ -302,8 +352,8 @@ export default {
           },
         })
         .then((res) => {
-          this.clientes = res.data;
-          /* console.table(res.data); */
+      
+          this.items = res.data;
         })
         .catch((error) => {
           console.error(error);
@@ -311,11 +361,10 @@ export default {
     },
 
     guardar() {
-  
       if (this.modificar) {
         this.isValid = true;
         this.$v.$touch();
-        
+
         if (this.$v.$invalid) {
           return;
         }
@@ -337,15 +386,14 @@ export default {
             array.forEach(swal(String(array)));
           });
       } else {
-        
         this.isValid = true;
         this.$v.$touch();
-        
+
         if (this.$v.$invalid) {
           return;
         }
-        
-        console.log('entro a CREAR')
+
+      
         axios
           .post(process.env.VUE_APP_RUTA_API + "clientes", this.cliente, {
             headers: { Authorization: "Bearer " + localStorage.token },
@@ -362,7 +410,7 @@ export default {
           });
       }
     },
- 
+
     eliminar(id) {
       swal({
         title: "¿ Esta seguro ?",
@@ -386,8 +434,8 @@ export default {
             });
         }
       });
-    },        
-    
+    },
+
     abrirModal(data = {}) {
       this.modal = 1;
       if (this.modificar) {
@@ -400,6 +448,7 @@ export default {
         this.cliente.direccion = data.direccion;
         this.cliente.email = data.email;
         this.cliente.telefono = data.telefono;
+        this.cliente.iva = data.iva;
       } else {
         this.id = 0;
         this.tituloModal = "Crear Cliente";
@@ -410,9 +459,10 @@ export default {
         this.cliente.direccion = "";
         this.cliente.email = "";
         this.cliente.telefono = "";
+        this.cliente.iva = "";
       }
     },
-    
+
     cerrarModal() {
       this.modal = 0;
     },
@@ -421,8 +471,6 @@ export default {
   created() {
     this.listar_clientes();
   },
-
- 
 };
 </script>
 <style>
@@ -430,5 +478,9 @@ export default {
   display: list-item;
   opacity: 1;
   background: rgba(131, 145, 146, 0.705);
+}
+.pagination {
+  display: flex;
+  justify-content: center;
 }
 </style>
