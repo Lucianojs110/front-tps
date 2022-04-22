@@ -98,7 +98,7 @@ export default {
       showMenu: false,
       searchModalVisible: false,
       searchQuery: '',
-      user_name: localStorage.name
+      user_name: localStorage.nombre
     };
   },
   methods: {

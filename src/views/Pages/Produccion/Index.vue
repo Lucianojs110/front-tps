@@ -293,6 +293,12 @@
                 >
                   El campo es requerido
                 </div>
+                 <div
+                  v-if="isValid && !$v.produccion.cantidad.decimal"
+                  class="invalid-feedback"
+                >
+                  Ingrese un numero valido
+                </div>
               </div>
 
               <br />
@@ -469,7 +475,7 @@
 
 <script>
 import axios from "axios";
-import { required } from "vuelidate/lib/validators";
+import { required, decimal } from "vuelidate/lib/validators";
 export default {
   props: ["items"],
   computed: {
@@ -535,6 +541,7 @@ export default {
       },
       cantidad: {
         required,
+        decimal
       },
       acciones: {
         required,

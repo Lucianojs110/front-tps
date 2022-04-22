@@ -168,12 +168,7 @@
                     >
                       Editar
                     </button>
-                    <button
-                      @click="eliminar(roles.id)"
-                      class="btn btn-danger btn-sm"
-                    >
-                      Eliminar
-                    </button>
+                   
                   </td>
                 </tr>
               </tbody>

@@ -721,7 +721,7 @@ export default {
         })
         .then((res) => {
           this.items = res.data;
-          console.table(res.data);
+          
         })
         .catch((error) => {
           console.error(error);

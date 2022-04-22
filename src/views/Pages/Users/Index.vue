@@ -27,14 +27,14 @@
               <div class="col-md-6">
                 <label>Nombre</label>
                 <input
-                  v-model="usuarios.name"
+                  v-model="usuarios.nombre"
                   type="text"
                   class="form-control"
-                  id="name"
+              
                   placeholder="Nombre del usuario"
-                  :class="{ 'is-invalid': isValid && $v.usuarios.name.$error }"
+                  :class="{ 'is-invalid': isValid && $v.usuarios.nombre.$error }"
                 />
-                <div v-if="isValid && !$v.usuarios.name.required" class="invalid-feedback">
+                <div v-if="isValid && !$v.usuarios.nombre.required" class="invalid-feedback">
                   El campo es requerido
                 </div>
               </div>
@@ -42,14 +42,14 @@
               <div class="col-md-6">
                 <label>Apellido</label>
                 <input
-                  v-model="usuarios.last_name"
+                  v-model="usuarios.apellido"
                   type="text"
                   class="form-control"
-                  id="last_name"
+          
                   placeholder="Apellido del usuario"
-                  :class="{ 'is-invalid': isValid && $v.usuarios.last_name.$error }"
+                  :class="{ 'is-invalid': isValid && $v.usuarios.apellido.$error }"
                 />
-                  <div v-if="isValid && !$v.usuarios.last_name.required" class="invalid-feedback">
+                  <div v-if="isValid && !$v.usuarios.apellido.required" class="invalid-feedback">
                   El campo es requerido
                  </div>
               </div>
@@ -187,46 +187,43 @@
                 </b-col>
               </b-row>
             </template>
-            <div class="table-responsive">
-            <table class="table" id="table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-                  <th>Email</th>
-                  <th>Rol</th>
-                  <th>Accion</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="users in user" :key="users.id">
-                  <th scope="row">{{ users.id }}</th>
-                  <td>{{ users.name }}</td>
-                  <td>{{ users.last_name }}</td>
-                  <td>{{ users.email }}</td>
-                  <td>{{ users.role.name }}</td>
-
-                  <td>
-                    <button
-                      @click="
-                        modificar = true;
-                        abrirModal(users);
-                      "
-                      class="btn btn-secondary btn-sm"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      @click="eliminar(users.id)"
-                      class="btn btn-danger btn-sm"
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+         <div class="table-responsive">
+              <b-table
+                striped
+                hover
+                :items="items"
+                :fields="fields"
+                :per-page="perPage"
+                :current-page="currentPage"
+                :filter="filter"
+              >
+                <template v-slot:cell(rol)="data">
+               {{ data.item.role.name }}
+                </template>
+                <template v-slot:cell(acciones)="data">
+                  <button
+                    @click="
+                      modificar = true;
+                      abrirModal(data.item);
+                    "
+                    class="btn btn-secondary btn-sm"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    @click="eliminar(data.item.id)"
+                    class="btn btn-danger btn-sm"
+                  >
+                    Eliminar
+                  </button>
+                </template>
+              </b-table>
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+              >
+              </b-pagination>
             </div>
           </b-card>
         </b-col>
@@ -235,15 +232,38 @@
     </b-container>
   </div>
 </template>
+<script src="https://unpkg.com/vue@2.6.2/dist/vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.js"></script>
 <script>
 import axios from "axios";
 import { required, minLength,  sameAs, email } from "vuelidate/lib/validators";
 export default {
+   props: ["items"],
+   computed: {
+    rows() {
+      return this.items.length;
+    },
+  },
   data() {
     return {
+          fields: [
+        "id",
+        "nombre",
+        "apellido",
+        "email",
+        "rol",
+        "acciones",
+      ],
+      selected: new Date(),
+      showWeekNumber: false,
+      locale: "es-ES",
+      perPage: 10,
+      currentPage: 1,
+      filter: "",
+
       usuarios: {
-        name: "",
-        last_name: "",
+        nombre: "",
+        apellido: "",
         email: "",
         password: "",
         cpassword: "",
@@ -265,11 +285,11 @@ export default {
 
   validations: {
     usuarios: {
-      name: {
+      nombre: {
         required,
         minLength: minLength(2),
       },
-      last_name: {
+      apellido: {
         required,
       },
        email: {
@@ -307,7 +327,7 @@ export default {
           },
         })
         .then((res) => {
-          this.user = res.data;
+          this.items = res.data;
         })
         .catch((error) => {
           console.error(error);
@@ -399,8 +419,8 @@ export default {
       if (this.modificar) {
         this.id = data.id;
         this.tituloModal = "Modificar Usuario";
-        this.usuarios.name = data.name;
-        this.usuarios.last_name = data.last_name;
+        this.usuarios.nombre = data.nombre;
+        this.usuarios.apellido = data.apellido;
         this.usuarios.email = data.email;
         this.usuarios.password = data.password;
         this.usuarios.rol = data.role.id;
@@ -408,8 +428,8 @@ export default {
       } else {
         this.id = 0;
         this.tituloModal = "Crear Usuario";
-        this.usuarios.name = "";
-        this.usuarios.last_name = "";
+        this.usuarios.nombre = "";
+        this.usuarios.apellido = "";
         this.usuarios.email = "";
         this.usuarios.password = "";
         this.usuarios.rol = "";
@@ -447,6 +467,10 @@ export default {
   display: list-item;
   opacity: 1;
   background: rgba(131, 145, 146, 0.705);
+}
+.pagination {
+  display: flex;
+  justify-content: center;
 }
 </style>
 

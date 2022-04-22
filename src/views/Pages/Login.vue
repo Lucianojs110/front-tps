@@ -84,13 +84,13 @@ import { mapActions} from 'vuex';
         };
         axios.post(process.env.VUE_APP_RUTA_API+'login', json)
         .then( data =>{
-            console.log(data)
+            console.log(data.data.user.apellido)
            if(data.data.access_token){
               this.$toastr.s("Ingreso Exitoso");
               this.inLogin()
               localStorage.token = data.data.access_token;
-              localStorage.name = data.data.user.name;
-              localStorage.last_name = data.data.user.last_name;
+              localStorage.nombre= data.data.user.nombre;
+              localStorage.apellido = data.data.user.apellido;
               this.$router.push('dashboard');
            }else{
              this.error = true;

@@ -105,7 +105,7 @@
                   v-model="proveedor.email"
                   type="text"
                   class="form-control"
-                  id="email"
+                 
                   placeholder="Ingrese una dirección de email"
                 />
               </div>
@@ -116,7 +116,7 @@
                   v-model="proveedor.telefono"
                   type="text"
                   class="form-control"
-                  id="last_name"
+          
                   placeholder="Ingrese el numero de teléfono"
                  
                 />
@@ -143,7 +143,7 @@
                   v-model="proveedor.ciudad"
                   type="text"
                   class="form-control"
-                  id="last_name"
+    
                   placeholder="Ingrese localidad del proveedor"
                 />
               </div>
@@ -199,46 +199,39 @@
               </b-row>
             </template>
             <div class="table-responsive">
-              <table class="table" id="table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Nombre/razon social</th>
-                    <th>DNI/CUIT</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="proveedor in proveedores" :key="proveedor.id">
-                    <th scope="row">{{ proveedor.id }}</th>
-                    <td>{{ proveedor.nombre }}</td>
-                    <td>{{ proveedor.tipo_doc }} - {{ proveedor.num_doc }}</td>
-                    <td>{{ proveedor.direccion }} - {{ proveedor.ciudad }}</td>
-                    <td>{{ proveedor.telefono }}</td>
-                    <td>{{ proveedor.email }}</td>
-                    <td>
-                      <button
-                        @click="
-                          modificar = true;
-                          abrirModal(proveedor);
-                        "
-                        class="btn btn-secondary btn-sm"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        @click="eliminar(proveedor.id)"
-                        class="btn btn-danger btn-sm"
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <b-table
+                striped
+                hover
+                :items="items"
+                :fields="fields"
+                :per-page="perPage"
+                :current-page="currentPage"
+                :filter="filter"
+              >
+                <template v-slot:cell(acciones)="data">
+                  <button
+                    @click="
+                      modificar = true;
+                      abrirModal(data.item);
+                    "
+                    class="btn btn-secondary btn-sm"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    @click="eliminar(data.item.id)"
+                    class="btn btn-danger btn-sm"
+                  >
+                    Eliminar
+                  </button>
+                </template>
+              </b-table>
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+              >
+              </b-pagination>
             </div>
           </b-card>
         </b-col>
@@ -247,12 +240,40 @@
     </b-container>
   </div>
 </template>
+<script src="https://unpkg.com/vue@2.6.2/dist/vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.js"></script>
 <script>
 import axios from "axios";
 import { required, minLength, sameAs, email } from "vuelidate/lib/validators";
 export default {
+  props: ["items"],
+   computed: {
+    rows() {
+      return this.items.length;
+    },
+  },
   data() {
     return {
+
+       fields: [
+        "id",
+        "nombre",
+        "tipo_doc",
+        "num_doc",
+        "ciudad",
+        "direccion",
+        "email",
+        "telefono",
+        "acciones",
+      ],
+
+      selected: new Date(),
+      showWeekNumber: false,
+      locale: "es-ES",
+      perPage: 10,
+      currentPage: 1,
+      filter: "",
+
       proveedor: {
         nombre: "",
         tipo_doc: "",
@@ -302,8 +323,8 @@ export default {
           },
         })
         .then((res) => {
-          this.proveedores = res.data;
-          console.table(res.data);
+          
+          this.items = res.data;
         })
         .catch((error) => {
           console.error(error);
@@ -426,5 +447,9 @@ export default {
   display: list-item;
   opacity: 1;
   background: rgba(131, 145, 146, 0.705);
+}
+.pagination {
+  display: flex;
+  justify-content: center;
 }
 </style>
