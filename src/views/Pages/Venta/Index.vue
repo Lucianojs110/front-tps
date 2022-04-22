@@ -339,13 +339,20 @@
                 <template v-slot:cell(cantidad)="data">
                   {{ data.item.cantidad }}
                 </template>
+                
                 <template v-slot:cell(acciones)="data">
                    
                   <RouterLink :to="`venta/${data.item.id}`" 
-                  class="btn btn-secondary btn-sm"> 
-                  Ver 
+                  class="btn btn-success btn-sm"
+                  v-if="data.item.cae"> 
+                  Ver Factura
                   </RouterLink>
-
+                  <button v-if="!data.item.cae"
+                    @click="registrar(data.item.id)"
+                    class="btn btn-success btn-sm"
+                  >
+                    Registrar Factura 
+                  </button>
                   <button
                     @click="
                       modificar = true;
@@ -560,6 +567,27 @@ export default {
             });
         }
       });
+    },
+
+     registrar(id) {
+        axios
+          .post(
+            process.env.VUE_APP_RUTA_API + "afip/" + id,
+            {
+              headers: { Authorization: "Bearer " + localStorage.token },
+            }
+          )
+          .then((res) => {
+      
+            this.listar_ventas();
+            swal("Exito!", "Se ha registrado la factura correctamente!", "success");
+         
+          })
+          .catch(function (error) {
+            var array = Object.values(error.response.data.errors + "<br>");
+            array.forEach(swal(String(array)));
+          });
+      
     },
 
     abrirModal(data = {}) {

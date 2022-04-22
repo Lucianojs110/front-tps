@@ -95,9 +95,7 @@
                      <li class="nav-item">
                          <router-link class="nav-link" to="/venta"><i class="ni ni-cart"></i>Venta</router-link>
                     </li>
-                     <li class="nav-item">
-                         <router-link class="nav-link" to="/facturacion"><i class="ni ni-single-copy-04"></i>Facturación</router-link>
-                    </li>
+                    
                       <li class="nav-item">
                          <router-link class="nav-link" to="/transportistas"><i class="ni ni-delivery-fast"></i>Transportistas</router-link>
                     </li>

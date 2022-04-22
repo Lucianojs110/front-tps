@@ -31,22 +31,22 @@
                   <row align-v="center">
                     <div class="row gx-1 p-3">
                       <div class="col-md-4">
-                        <h1>TPS</h1>
-                        Razon Social: Carlos Perez <br />
-                        Domicilio Comercial: Bla bla <br />
+                        <h2>TPS Distribuciones</h2>
+                       
+                        Domicilio Comercial:  <br />
                         Condición frente al IVA: Responsable Inscripto<br />
                       </div>
                       <div class="col-md-2 text-center">
                         FACTURA
-                        <h1>A</h1>
+                        <h1>{{ venta.tipo_comprobante }}</h1>
                       </div>
 
                       <div class="col-md-6">
-                        Punto de Venta: 00001 Comp. Nro: 00000001 <br />
+                        Factura N°:  {{ venta.num_comprobante }} <br />
                         Fecha de emision: {{ venta.fecha }} <br />
-                        CUIT: 45454545454 <br />
-                        Ingresos Brutos: 221654564 <br />
-                        Fecha Inicio de Actividades: 18/08/2015 <br />
+                        CUIT: 30-71660587-2 <br />
+                        Ingresos Brutos: <br />
+                        Fecha Inicio de Actividades:  <br />
                       </div>
                     </div>
                   </row>
@@ -86,11 +86,29 @@
                   <row align-v="center">
                     <div class="row gx-1 p-3">
                       <div class="col-md-8"></div>
-                      <div class="col-md-4">
+                      <div class="col-md-4" v-if="venta.tipo_comprobante=='A'">
                         Importe Neto Gravado: ${{ venta.neto }}<br />
                         IVA 21%: ${{ venta.iva }}<br />
                         Importe Otros Tributos: $0.00<br />
                         Importe Total: ${{ venta.total }}
+                      </div>
+                      <div class="col-md-4" v-if="venta.tipo_comprobante=='B'">
+          
+                        Importe Total: ${{ venta.total }}
+                      </div>
+                    </div>
+                  </row>
+
+                     <row align-v="center">
+                    <div class="row gx-1 p-3">
+                      <div class="col-md-3">
+                         <img width="150" height="150" :src="'https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=' + venta.codigoQr ">
+              
+                      </div>
+                      <div class="col-md-4">
+                        <br><br>
+                        CAE: {{ venta.cae }}<br>
+                        Vto. CAE: {{ venta.vto_cae}}<br>
                       </div>
                     </div>
                   </row>
@@ -171,6 +189,12 @@ export default {
           this.venta.precio_unitario = res.data.precio_unitario;
           this.venta.iva = res.data.iva;
           this.venta.neto = res.data.neto;
+          this.venta.tipo_comprobante = res.data.tipo_comprobante;
+          this.venta.vto_cae = res.data.vto_cae;
+          this.venta.cae = res.data.cae;
+          this.venta.codigoQr = res.data.codigoQr;
+          this.venta.num_comprobante = res.data.num_comprobante;
+          this.venta.fecha_factura = res.data.fecha_factura;
         })
         .catch((error) => {
           console.error(error);
