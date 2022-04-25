@@ -91,7 +91,7 @@
               </div>
 
               <div class="col-md-6" v-if="finalizar.acciones == 'Procesar'">
-                <label>Cantidad Aceite (lts.)</label>
+                <label>Cantidad Aceite (kg.)</label>
                 <input
                   v-model="finalizar.cantidad_aceite"
                   type="number"
