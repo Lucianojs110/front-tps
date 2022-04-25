@@ -7,7 +7,8 @@
                 
             </navbar-toggle-button>
             <router-link class="navbar-brand" to="/">
-                <img :src="logo" class="navbar-brand-img" alt="...">
+                
+                 <img src="@/assets/green.png" class="navbar-brand-img" >
             </router-link>
 
             <slot name="mobile-right">
@@ -18,6 +19,7 @@
                             <div class="media align-items-center">
                               <span class="avatar avatar-sm rounded-circle">
                                 <img alt="Image placeholder" src="img/theme/team-1.jpg">
+                               
                               </span>
                             </div>
                         </a>
@@ -138,7 +140,7 @@
         this.$sidebar.displaySidebar(true)
       },
        closeSession(){
-      this.outLogin()
+      //this.outLogin()
       localStorage.clear();
       this.$router.push('/login');
     },
