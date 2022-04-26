@@ -21,6 +21,49 @@
           </div>
           <!-- Modal body -->
           <div class="modal-body">
+
+           <div class="row">
+          
+              <div class="col-md-6">
+                <label>Cuit</label>
+                <input
+                  v-model="cliente.num_doc"
+                  type="text"
+                  class="form-control"
+                  id="num_doc"
+                  placeholder="Numero de CUIT o DNI"
+                  :class="{
+                    'is-invalid': isValid && $v.cliente.num_doc.$error,
+                  }"
+                />
+                <div
+                  v-if="isValid && !$v.cliente.num_doc.required"
+                  class="invalid-feedback"
+                >
+                  El campo es requerido
+                </div>
+              </div>
+
+               <div class="col-md-6">
+                 <br>
+                <button
+              type="button"
+              class="btn btn-success"
+              data-dismiss="modal"
+              @click="validarcuit()"
+            >
+              Validar Cuit
+            </button>
+
+        
+              </div>
+
+              
+           
+            </div>
+            <!-- Fin Fila -->
+
+
             <!-- Inicio Fila -->
             <div class="row">
               <div class="col-md-6">
@@ -43,20 +86,19 @@
                 </div>
               </div>
 
-              <div class="col-md-2">
-                <label>Tipo Doc</label>
+                  <div class="col-md-6">
+                <label>Condicion frente al iva</label>
                 <select
-                  @change="selectCategory($event)"
-                  v-model="cliente.tipo_doc"
+                  v-model="cliente.iva"
                   class="form-control"
                   :class="{
-                    'is-invalid': isValid && $v.cliente.tipo_doc.$error,
+                    'is-invalid': isValid && $v.cliente.iva.$error,
                   }"
                 >
                   <option disabled value="">Seleccione...</option>
                   <option
                     selected
-                    v-for="item in items_tipo_doc"
+                    v-for="item in items_iva"
                     :key="item"
                     :value="item"
                   >
@@ -64,32 +106,16 @@
                   </option>
                 </select>
                 <div
-                  v-if="isValid && !$v.cliente.tipo_doc.required"
+                  v-if="isValid && !$v.cliente.iva.required"
                   class="invalid-feedback"
                 >
                   El campo es requerido
                 </div>
               </div>
 
-              <div class="col-md-4">
-                <label>Numero Documento</label>
-                <input
-                  v-model="cliente.num_doc"
-                  type="text"
-                  class="form-control"
-                  id="num_doc"
-                  placeholder="Numero de CUIT o DNI"
-                  :class="{
-                    'is-invalid': isValid && $v.cliente.num_doc.$error,
-                  }"
-                />
-                <div
-                  v-if="isValid && !$v.cliente.num_doc.required"
-                  class="invalid-feedback"
-                >
-                  El campo es requerido
-                </div>
-              </div>
+  
+
+        
             </div>
             <!-- Fin Fila -->
 
@@ -142,35 +168,7 @@
             </div>
             <!-- Fin Fila -->
 
-                <div class="row">
-
-               <div class="col-md-6">
-                <label>Condicion frente al iva</label>
-                <select
-                  v-model="cliente.iva"
-                  class="form-control"
-                  :class="{
-                    'is-invalid': isValid && $v.cliente.iva.$error,
-                  }"
-                >
-                  <option disabled value="">Seleccione...</option>
-                  <option
-                    selected
-                    v-for="item in items_iva"
-                    :key="item"
-                    :value="item"
-                  >
-                    {{ item }}
-                  </option>
-                </select>
-                <div
-                  v-if="isValid && !$v.cliente.iva.required"
-                  class="invalid-feedback"
-                >
-                  El campo es requerido
-                </div>
-              </div>
-          </div>
+        
           </div>
 
       
@@ -409,6 +407,77 @@ export default {
             array.forEach(swal(String(array)));
           });
       }
+    },
+
+
+     validarcuit() {
+   
+    
+        axios
+          .post(process.env.VUE_APP_RUTA_API + "consultarcuit", this.cliente, {
+            headers: { Authorization: "Bearer " + localStorage.token },
+          })
+          .then((res) => {
+           
+            if(res.data.persona){
+
+            if(res.data.persona.datosRegimenGeneral){
+              if(res.data.persona.datosGenerales.nombre){
+                  this.cliente.nombre = res.data.persona.datosGenerales.nombre + " " + res.data.persona.datosGenerales.apellido,
+                  this.cliente.direccion = res.data.persona.datosGenerales.domicilioFiscal.direccion;
+                  if(res.data.persona.datosGenerales.domicilioFiscal.descripcionProvincia == "CIUDAD AUTONOMA BUENOS AIRES" ){
+                    this.cliente.ciudad = 'CIUDAD AUTONOMA BUENOS AIRES';
+                  }else{
+                    this.cliente.ciudad = res.data.persona.datosGenerales.domicilioFiscal.localidad + " - " + res.data.persona.datosGenerales.domicilioFiscal.descripcionProvincia; 
+                  }
+                  this.cliente.iva = "RESPONSABLE INSCRIPTO";
+                  
+                  
+              }else{
+                   this.cliente.nombre = res.data.persona.datosGenerales.razonSocial;
+                   this.cliente.direccion = res.data.persona.datosGenerales.domicilioFiscal.direccion;
+                   if(res.data.persona.datosGenerales.domicilioFiscal.descripcionProvincia == "CIUDAD AUTONOMA BUENOS AIRES" ){
+                    this.cliente.ciudad = 'CIUDAD AUTONOMA BUENOS AIRES';
+                  }else{
+                    this.cliente.ciudad = res.data.persona.datosGenerales.domicilioFiscal.localidad + " - " + res.data.persona.datosGenerales.domicilioFiscal.descripcionProvincia; 
+                  }
+                  this.cliente.iva = "RESPONSABLE INSCRIPTO";
+              }
+            }else{
+                if(res.data.persona.datosGenerales.nombre){
+                  this.cliente.nombre = res.data.persona.datosGenerales.nombre + " " + res.data.persona.datosGenerales.apellido;
+                  this.cliente.direccion = res.data.persona.datosGenerales.domicilioFiscal.direccion;
+                   if(res.data.persona.datosGenerales.domicilioFiscal.descripcionProvincia == "CIUDAD AUTONOMA BUENOS AIRES" ){
+                    this.cliente.ciudad = 'CIUDAD AUTONOMA BUENOS AIRES';
+                  }else{
+                    this.cliente.ciudad = res.data.persona.datosGenerales.domicilioFiscal.localidad + " - " + res.data.persona.datosGenerales.domicilioFiscal.descripcionProvincia; 
+                  };
+                  this.cliente.iva = "CONSUMIDOR FINAL"
+              }else{
+                   this.cliente.nombre = res.data.persona.datosGenerales.razonSocial;
+                   this.cliente.direccion = res.data.persona.datosGenerales.domicilioFiscal.direccion;
+                     if(res.data.persona.datosGenerales.domicilioFiscal.descripcionProvincia == "CIUDAD AUTONOMA BUENOS AIRES" ){
+                    this.cliente.ciudad = 'CIUDAD AUTONOMA BUENOS AIRES';
+                    }else{
+                    this.cliente.ciudad = res.data.persona.datosGenerales.domicilioFiscal.localidad + " - " + res.data.persona.datosGenerales.domicilioFiscal.descripcionProvincia; 
+                    }
+                  this.cliente.iva = "CONSUMIDOR FINAL"
+              }
+             
+
+            }
+             }else{
+
+                swal("Consulta de Cuit!", "El cuit no pertenece a un contribuyente!", "info");
+              }
+          
+       
+          })
+          .catch(function (error) {
+            var array = Object.values(error.response.data.errors + "<br>");
+            array.forEach(swal(String(array)));
+          });
+      
     },
 
     eliminar(id) {
