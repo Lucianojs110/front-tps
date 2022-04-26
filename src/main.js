@@ -5,12 +5,13 @@ import App from "./App.vue";
 import router from "./routes/router";
 import VueAxios from "vue-axios";
 import Axios from "axios";
-import Vuelidate from 'vuelidate';
-import store from './store';
+import Vuelidate from "vuelidate";
+import store from "./store";
 import VueToastr from "vue-toastr";
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import VueMomentLib from "vue-moment-lib";
+import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.use(BootstrapVue);
 //Vue.use(IconsPlugin);
@@ -18,16 +19,11 @@ Vue.use(DashboardPlugin);
 Vue.use(VueAxios, Axios);
 Vue.use(Vuelidate);
 Vue.use(VueToastr);
-
-
+Vue.use(VueMomentLib);
 
 new Vue({
   el: "#app",
-  render: h => h(App),
-  router, 
-  store
-  
+  render: (h) => h(App),
+  router,
+  store,
 });
-
-
-

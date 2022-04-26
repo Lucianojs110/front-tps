@@ -422,6 +422,9 @@
                 <template v-slot:cell(producto)="data">
                   {{ data.item.producto.nombre }}
                 </template>
+                <template v-slot:cell(fecha)="data">
+                  {{ $moment(data.item.fecha).format('DD-MM-YYYY') }}
+                </template>
                 <template v-slot:cell(cantidad)="data">
                   {{ data.item.cantidad }} kg.
                 </template>
@@ -472,6 +475,7 @@
 
 <script src="https://unpkg.com/vue@2.6.2/dist/vue.min.js"></script>
 <script src="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.js"></script>
+
 
 <script>
 import axios from "axios";

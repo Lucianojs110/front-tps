@@ -336,6 +336,9 @@
                 <template v-slot:cell(cliente)="data">
                   {{ data.item.cliente.nombre }}
                 </template>
+                <template v-slot:cell(fecha)="data">
+                  {{ $moment(data.item.fecha).format('DD-MM-YYYY') }}
+                </template>
                 <template v-slot:cell(cantidad)="data">
                   {{ data.item.cantidad }}
                 </template>

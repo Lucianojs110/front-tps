@@ -43,7 +43,7 @@
 
                       <div class="col-md-6">
                         Factura N°:  {{ venta.num_comprobante }} <br />
-                        Fecha de emision: {{ venta.fecha }} <br />
+                        Fecha de emision: {{ $moment(venta.fecha).format('DD-MM-YYYY') }} <br />
                         CUIT: 30-71660587-2 <br />
                         Ingresos Brutos: <br />
                         Fecha Inicio de Actividades:  <br />
