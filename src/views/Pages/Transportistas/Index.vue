@@ -55,7 +55,7 @@
                   type="text"
                   class="form-control"
                   id="cuit_chofer"
-                  placeholder="CUIT"
+                  placeholder="DNI"
                   :class="{
                     'is-invalid':
                       isValid && $v.transportista.dni_chofer.$error,
