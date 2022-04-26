@@ -567,8 +567,8 @@
                 <template v-slot:cell(proveedor)="data">
                   {{ data.item.proveedor.nombre }}
                 </template>
-                <template v-slot:cell(fecha)="data">
-                  {{ $moment(data.item.fecha).format('DD-MM-YYYY') }}
+                <template v-slot:cell(fecha_entrada)="data">
+                  {{ $moment(data.item.fecha_entrada).format('DD-MM-YYYY') }}
                 </template>
                 <template v-slot:cell(cantidad)="data">
                   {{ data.item.cantidad }} kg.
