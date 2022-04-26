@@ -119,30 +119,7 @@
             </div>
             <!-- Fin Fila -->
 
-            <!-- Inicio Fila -->
-            <div class="row">
-              <div class="col-md-6">
-                <label>Email</label>
-                <input
-                  v-model="cliente.email"
-                  type="text"
-                  class="form-control"
-                  id="email"
-                  placeholder="Ingrese una dirección de email"
-                />
-              </div>
-
-              <div class="col-md-6">
-                <label>Teléfono</label>
-                <input
-                  v-model="cliente.telefono"
-                  type="text"
-                  class="form-control"
-                  placeholder="Ingrese el numero de teléfono"
-                />
-              </div>
-            </div>
-            <!-- Fin Fila -->
+           
 
             <!-- Inicio Fila -->
             <div class="row">
@@ -163,6 +140,31 @@
                   type="text"
                   class="form-control"
                   placeholder="Ingrese localidad del Cliente"
+                />
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+             <!-- Inicio Fila -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>Email</label>
+                <input
+                  v-model="cliente.email"
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  placeholder="Ingrese una dirección de email"
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label>Teléfono</label>
+                <input
+                  v-model="cliente.telefono"
+                  type="text"
+                  class="form-control"
+                  placeholder="Ingrese el numero de teléfono"
                 />
               </div>
             </div>
@@ -325,9 +327,7 @@ export default {
         required,
         minLength: minLength(2),
       },
-      tipo_doc: {
-        required,
-      },
+     
       num_doc: {
         required,
       },
