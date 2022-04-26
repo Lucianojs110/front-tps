@@ -265,7 +265,7 @@
                 >
                   <option selected disabled value="">Seleccione...</option>
                   <option value="Desactivar">Desactivar</option>
-                  <option value="Procesar">Procesar</option>
+                  <option value="Procesar" v-if="produccion.id_producto!='3'">Procesar</option>
                 </select>
                 <div
                   v-if="isValid && !$v.produccion.acciones.required"
@@ -531,6 +531,8 @@ export default {
       isValid_hora: false,
       crear_venta: false,
       clientes: [],
+      items_prod: ["Desactivar", "Procesar"],
+
     };
   },
 
