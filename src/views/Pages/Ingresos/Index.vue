@@ -243,7 +243,6 @@
               <div class="col-md-6">
                 <label>Proveedor</label>
                 <select
-                
                   v-model="ingreso.id_proveedor"
                   class="form-control"
                   :class="{
@@ -272,7 +271,6 @@
                 <label>Tipo de Grano</label>
 
                 <select
-            
                   v-model="ingreso.id_producto"
                   class="form-control"
                   :class="{
@@ -539,19 +537,97 @@
                     type="primary"
                     >Nuevo Ingreso</base-button
                   >
-
-                  <b-form-input
-                    v-model="filter"
-                    type="search"
-                    placeholder="Buscar"
-                    class="mt-2"
-                  >
-                  </b-form-input>
                 </b-col>
               </b-row>
             </template>
 
-            <div class="table-responsive">
+            <div class="row p-2">
+              <div class="col-md-3">
+                <label>Fecha Inicio</label>
+
+                <b-datepicker
+                  v-model="filtro.fecha_entrada_inicio"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione la fecha..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :date-format-options="{
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                  }"
+                >
+                </b-datepicker>
+              </div>
+
+              <div class="col-md-3">
+                <label>Fecha Final</label>
+
+                <b-datepicker
+                  v-model="filtro.fecha_entrada_fin"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione la fecha..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :date-format-options="{
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                  }"
+                >
+                </b-datepicker>
+              </div>
+
+              <div class="col-md-2">
+                <label>Rechazado</label>
+                <select
+                  id="rechazado"
+                  v-model="filtro.rechazado"
+                  class="form-control"
+                >
+                  <option selected value="">Seleccione...</option>
+                  <option value="">Todos</option>
+                  <option value="No">No</option>
+                  <option value="Si">Si</option>
+                </select>
+              </div>
+
+              <div class="col-md-2">
+                <label>Tipo de Grano</label>
+
+                <select v-model="filtro.id_producto" class="form-control">
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="">Todos</option>
+                  <option value="1">Soja</option>
+                  <option value="2">Girasol</option>
+                  <option value="3">Maíz</option>
+                </select>
+              </div>
+
+              <div class="col-md-2">
+                <br />
+                <base-button @click="listar_ingresos" size="lg" type="primary"
+                  >Filtrar</base-button
+                >
+              </div>
+            </div>
+            <!-- Fin Fila -->
+
+            <div class="p-2">
+              <base-button @click="downloadExl" size="md" type="primary"
+                >Exportar en exel</base-button
+              >
+            </div>
+
+            <div class="table-responsive" id="tableId">
               <b-table
                 striped
                 hover
@@ -568,7 +644,7 @@
                   {{ data.item.proveedor.nombre }}
                 </template>
                 <template v-slot:cell(fecha_entrada)="data">
-                  {{ $moment(data.item.fecha_entrada).format('DD-MM-YYYY') }}
+                  {{ $moment(data.item.fecha_entrada).format("DD-MM-YYYY") }}
                 </template>
                 <template v-slot:cell(cantidad)="data">
                   {{ data.item.cantidad }} kg.
@@ -610,6 +686,7 @@
           </b-card>
         </b-col>
       </b-row>
+
       <!--End tables-->
     </b-container>
   </div>
@@ -618,9 +695,13 @@
 <script src="https://unpkg.com/vue@2.6.2/dist/vue.min.js"></script>
 <script src="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.js"></script>
 
+
 <script>
 import axios from "axios";
 import { required } from "vuelidate/lib/validators";
+var XLSX = require("xlsx");
+var FileSaver = require("file-saver");
+
 export default {
   props: ["items"],
   computed: {
@@ -660,6 +741,13 @@ export default {
         patente_transporte: "",
         rechazado: "",
         num_carta_porte: "",
+      },
+
+      filtro: {
+        id_producto: "",
+        fecha_entrada_fin: "",
+        fecha_entrada_inicio: "",
+        rechazado: "",
       },
 
       id: 0,
@@ -721,10 +809,15 @@ export default {
           headers: {
             Authorization: `Bearer ${localStorage.token}`,
           },
+          params: {
+            id_producto: this.filtro.id_producto,
+            rechazado: this.filtro.rechazado,
+            fecha_entrada_inicio: this.filtro.fecha_entrada_inicio,
+            fecha_entrada_fin: this.filtro.fecha_entrada_fin,
+          },
         })
         .then((res) => {
           this.items = res.data;
-          
         })
         .catch((error) => {
           console.error(error);
@@ -740,7 +833,6 @@ export default {
         })
         .then((res) => {
           this.proveedores = res.data;
-          
         })
         .catch((error) => {
           console.error(error);
@@ -879,6 +971,35 @@ export default {
     cerrarModal() {
       this.modal = 0;
     },
+
+    downloadExl() {
+      let wb = XLSX.utils.table_to_book(document.getElementById("tableId")),
+        wopts = {
+          bookType: "xlsx",
+          bookSST: false,
+          type: "binary",
+        },
+        wbout = XLSX.write(wb, wopts);
+
+      FileSaver.saveAs(
+        new Blob([this.s2ab(wbout)], {
+          type: "application/octet-stream;charset=utf-8",
+        }),
+        "Formulario de perfil personal.xlsx"
+      );
+    },
+    s2ab(s) {
+      if (typeof ArrayBuffer !== "undefind") {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      } else {
+        var buf = new Array(s.length);
+        for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      }
+    },
   },
 
   created() {
@@ -887,6 +1008,7 @@ export default {
   },
 };
 </script>
+
 <style>
 .mostrar {
   display: list-item;
