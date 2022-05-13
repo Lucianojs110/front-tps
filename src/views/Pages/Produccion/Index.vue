@@ -509,11 +509,7 @@
             </div>
 
             
-
-       
-             
-
-            <div class="table-responsive" id="tableId">
+            <div class="table-responsive" >
               <b-table
                 striped
                 hover
@@ -569,6 +565,44 @@
               >
               </b-pagination>
             </div>
+
+
+
+            <div class="table-responsive" id="tableId" style="display:none">
+              <b-table
+                striped
+                hover
+                :items="items"
+                :fields="fields2"
+                :per-page="perPage"
+                :current-page="currentPage"
+                :filter="filter"
+              >
+                <template v-slot:cell(producto)="data">
+                  {{ data.item.producto.nombre }}
+                </template>
+                <template v-slot:cell(fecha)="data">
+                  {{ $moment(data.item.fecha).format('DD-MM-YYYY') }}
+                </template>
+                <template v-slot:cell(cantidad)="data">
+                  {{ data.item.cantidad }} kg.
+                </template>
+           
+              </b-table>
+            
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
           </b-card>
         </b-col>
       </b-row>
@@ -604,6 +638,17 @@ export default {
         "fecha",
         "hora",
         "accion",
+      ],
+
+       fields2: [
+        "id",
+        "producto",
+        "cantidad",
+        "acciones",
+        "estado",
+        "fecha",
+        "hora",
+     
       ],
       selected: new Date(),
       showWeekNumber: false,

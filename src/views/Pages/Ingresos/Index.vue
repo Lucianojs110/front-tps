@@ -627,7 +627,7 @@
               >
             </div>
 
-            <div class="table-responsive" id="tableId">
+            <div class="table-responsive" >
               <b-table
                 striped
                 hover
@@ -683,6 +683,44 @@
               >
               </b-pagination>
             </div>
+
+            
+
+
+
+
+
+      <div class="table-responsive" id="tableId" style="display:none">
+              <b-table
+                striped
+                hover
+                :items="items"
+                :fields="fields2"
+                :per-page="perPage"
+                :current-page="currentPage"
+                :filter="filter"
+              >
+                <template v-slot:cell(producto)="data">
+                  {{ data.item.producto.nombre }}
+                </template>
+                <template v-slot:cell(proveedor)="data">
+                  {{ data.item.proveedor.nombre }}
+                </template>
+                <template v-slot:cell(fecha_entrada)="data">
+                  {{ $moment(data.item.fecha_entrada).format("DD-MM-YYYY") }}
+                </template>
+                <template v-slot:cell(cantidad)="data">
+                  {{ data.item.cantidad }} kg.
+                </template>
+         
+              </b-table>
+             
+            </div>
+
+
+
+
+
           </b-card>
         </b-col>
       </b-row>
@@ -720,6 +758,17 @@ export default {
         "condicion",
         "rechazado",
         "acciones",
+      ],
+
+         fields2: [
+        "id",
+        "producto",
+        "proveedor",
+        "fecha_entrada",
+        "cantidad",
+        "condicion",
+        "rechazado",
+      
       ],
       selected: new Date(),
       showWeekNumber: false,
