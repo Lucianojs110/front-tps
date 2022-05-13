@@ -985,7 +985,7 @@ export default {
         new Blob([this.s2ab(wbout)], {
           type: "application/octet-stream;charset=utf-8",
         }),
-        "Formulario de perfil personal.xlsx"
+        "Reporte Ingresos.xlsx"
       );
     },
     s2ab(s) {

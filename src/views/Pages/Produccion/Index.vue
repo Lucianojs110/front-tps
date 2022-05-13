@@ -398,18 +398,122 @@
                     >Ingresar a producción</base-button
                   >
 
-                  <b-form-input
-                    v-model="filter"
-                    type="search"
-                    placeholder="Buscar"
-                    class="mt-2"
-                  >
-                  </b-form-input>
+               
                 </b-col>
               </b-row>
             </template>
 
-            <div class="table-responsive">
+                        <div class="row p-2">
+              <div class="col-md-3">
+                <label>Fecha Inicio</label>
+
+                <b-datepicker
+                  v-model="filtro.fecha_entrada_inicio"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione la fecha..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :date-format-options="{
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                  }"
+                >
+                </b-datepicker>
+              </div>
+
+              <div class="col-md-3">
+                <label>Fecha Final</label>
+
+                <b-datepicker
+                  v-model="filtro.fecha_entrada_fin"
+                  :show-week-number="showWeekNumber"
+                  :locale="locale"
+                  placeholder="Seleccione la fecha..."
+                  icon="calendar-today"
+                  :icon-right="selected ? 'close-circle' : ''"
+                  icon-right-clickable
+                  @icon-right-click="clearDate"
+                  trap-focus
+                  :date-format-options="{
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                  }"
+                >
+                </b-datepicker>
+              </div>
+
+              <div class="col-md-2">
+                <label>Acción</label>
+                <select
+                  id="rechazado"
+                  v-model="filtro.accion"
+                  class="form-control"
+                >
+                  <option selected value="">Seleccione...</option>
+                  <option value="">Todos</option>
+                  <option value="Procesar">Procesar</option>
+                  <option value="Desactivar">Desactivar</option>
+                </select>
+              </div>
+
+                   <div class="col-md-2">
+                <label>Estado</label>
+                <select
+                  id="rechazado"
+                  v-model="filtro.estado"
+                  class="form-control"
+                >
+                  <option selected value="">Seleccione...</option>
+                  <option value="">Todos</option>
+                  <option value="en proceso">En Proceso</option>
+                  <option value="finalizado">Finalizado</option>
+                </select>
+              </div>
+
+              <div class="col-md-2">
+                <label>Tipo de Grano</label>
+
+                <select v-model="filtro.id_producto" class="form-control">
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="">Todos</option>
+                  <option value="1">Soja</option>
+                  <option value="2">Girasol</option>
+                  <option value="3">Maíz</option>
+                </select>
+              </div>
+
+              <div class="col-md-1">
+                <br />
+                <base-button @click="listar_produccion" size="md" type="primary"
+                  >Filtrar</base-button
+                >
+
+               
+              </div>
+
+
+                <div class="col-md-3">
+                <br />
+              
+
+                 <base-button @click="downloadExl" size="md" type="primary"
+                >Exportar en exel</base-button
+              >
+              </div>
+            </div>
+
+            
+
+       
+             
+
+            <div class="table-responsive" id="tableId">
               <b-table
                 striped
                 hover
@@ -480,6 +584,8 @@
 <script>
 import axios from "axios";
 import { required, decimal } from "vuelidate/lib/validators";
+var XLSX = require("xlsx");
+var FileSaver = require("file-saver");
 export default {
   props: ["items"],
   computed: {
@@ -512,6 +618,14 @@ export default {
         acciones: "",
         fecha: "",
         hora: "",
+      },
+
+       filtro: {
+        id_producto: "",
+        fecha_entrada_fin: "",
+        fecha_entrada_inicio: "",
+        accion: "",
+        estado: "",
       },
 
       finalizar: {
@@ -576,6 +690,13 @@ export default {
         .get(process.env.VUE_APP_RUTA_API + "produccion", {
           headers: {
             Authorization: `Bearer ${localStorage.token}`,
+          },
+           params: {
+            id_producto: this.filtro.id_producto,
+            accion: this.filtro.accion,
+            fecha_entrada_inicio: this.filtro.fecha_entrada_inicio,
+            fecha_entrada_fin: this.filtro.fecha_entrada_fin,
+            estado: this.filtro.estado,
           },
         })
         .then((res) => {
@@ -868,7 +989,36 @@ export default {
      crearVenta() {
      
       this.crear_venta = true;
-    }
+    },
+    downloadExl() {
+      let wb = XLSX.utils.table_to_book(document.getElementById("tableId")),
+        wopts = {
+          bookType: "xlsx",
+          bookSST: false,
+          type: "binary",
+        },
+        wbout = XLSX.write(wb, wopts);
+
+      FileSaver.saveAs(
+        new Blob([this.s2ab(wbout)], {
+          type: "application/octet-stream;charset=utf-8",
+        }),
+        "Reporte produccion.xlsx"
+      );
+    },
+    s2ab(s) {
+      if (typeof ArrayBuffer !== "undefind") {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      } else {
+        var buf = new Array(s.length);
+        for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      }
+    },
+  
   },
 
   created() {
